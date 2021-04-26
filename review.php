@@ -77,6 +77,7 @@
             </table>
         </div>
     </form>
+    <!---->
 </article>
 <script src="/js/amount_per_page.js"></script>
 <script>
