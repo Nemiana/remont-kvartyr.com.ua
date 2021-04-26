@@ -1,0 +1,11 @@
+* {
+	font-family: Arial, Geneva, Helvetica, sans-serif;
+}
+.login table {
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+.login table tr td {
+    padding: 7px;
+}

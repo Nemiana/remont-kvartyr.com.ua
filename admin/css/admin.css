@@ -1,0 +1,150 @@
+* {
+	font-family: Arial, Geneva, Helvetica, sans-serif;
+}
+/* Page login */
+.login table {
+    margin: auto;
+    margin-top: 50px;
+    text-align: center;
+}
+.login table tr td {
+    padding: 7px;
+}
+/* Navigation */
+nav ul
+{
+	border: 1px solid black;
+}
+nav ul li
+{
+	display: inline;
+    margin: 4vw;
+}
+nav ul li a
+{
+	text-decoration: none;
+	font-size: 24px;
+	color: black;
+}
+nav ul li a:hover
+{
+	color: #CD5555;
+	text-shadow: 2px 2px 3px #808080;
+}
+/* Exit */
+#exit {
+    text-align: right;
+}
+/* Admin page */
+.admin_page h1 {
+	text-align: center;
+	font-size: 26px;
+	color: #CD5555;
+}
+.admin_page table {
+	margin: 30px;
+}
+.admin_page td {
+	padding: 10px;
+}
+.admin_page textarea {
+	resize: none;
+}
+/* Pop-up action windows */
+.success_action, .fail_action {
+	position: fixed;
+	top: 100px;
+	right: 20px;
+	padding: 5px;
+	border-radius: 8px;
+	display: none;
+}
+.success_action {
+	background-color: #FFFF99;
+}
+.fail_action {
+	background-color: #FFCCCC;
+}
+/* Price list */
+.export a {
+	text-decoration: none;
+	color: black;
+}
+.price-list table {
+	margin: auto;
+	width: 80%;
+	margin-bottom: 40px;
+}
+.price-list input {
+	width: 95%;
+}
+.multi-action input {
+	margin: 0 20px;
+}
+.price-list input[type='image'] {
+	width: 30px;
+	height: 30px;
+}
+/* Modal window */
+.overlay {
+	display: none;
+}
+.overlay:before {
+	content: '';
+	background: #000;
+	position: fixed;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	opacity: 0.7;
+	z-index: 9999;
+}
+.window_add {
+	position: fixed;
+	top: 30%;
+	left: 30%;
+	width: 450px;
+	background: #fff;
+	border: 3px solid gray;
+	border-radius: 5px;
+	z-index: 9999;
+	opacity: 1;
+}
+.window_add table {
+	width: 98%;
+	margin: 5px;
+}
+.window_add input[type='text'] {
+	width: 100%;
+}
+/* Articles */
+.add_record td {
+	border: 1px solid black;
+}
+.add_record a {
+	text-decoration: none;
+	color: black;
+}
+.edit_article img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+}
+/* Review */
+.review table {
+	width: 95%;
+	background: none;
+	box-shadow: none;
+}
+.review td {
+	border: 1px dashed black;
+	text-align: center;
+}
+.review th {
+	border: 1px solid black;
+	padding: 7px;
+}
+.review_text {
+	text-align: left !important;
+}

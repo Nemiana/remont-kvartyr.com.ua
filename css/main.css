@@ -1,0 +1,252 @@
+*
+{
+	font-family: Arial, Geneva, Helvetica, sans-serif;
+}
+/* Header */
+header, nav ul
+{
+	text-align: center;
+}
+.header_title
+{
+	display: inline;
+	position: relative;
+	top: -25px;
+	text-align: center;
+	margin-left: 40px;
+	font-size: 3vw;
+	color: red;
+}
+.header_contact
+{
+	float: right;
+	position: relative;
+	right: 30px;
+}
+.img-phone
+{
+	position: relative;
+	top: 20px;
+}
+header div span
+{
+	margin: -20px;
+}
+.lang
+{
+	position: absolute;
+	left: 10px;
+	top: 10px;
+}
+header button
+{
+	padding: 0;
+	width: 34px;
+	height: 25px;
+}
+.rus
+{
+	margin-left:-4px;
+}
+/* Go top button */
+#go-top {
+	position: fixed; 
+	bottom: 40px; 
+	right: 40px; 
+	cursor:pointer; 
+	display:none;
+	width: 60px;
+	height: 20px;
+	text-align: center;
+	background: #c0c0c0;
+	border-radius: 5px;
+}
+#go-top:hover {
+	background: #6e6e6e;
+}
+/* Menu */
+nav ul
+{
+	border: 5px double black;
+}
+nav ul li
+{
+	display: inline;
+	margin: 20px;
+}
+nav ul li a
+{
+	text-decoration: none;
+	font-size: 24px;
+	color: #8B7D6B;
+}
+nav ul li a:hover
+{
+	color: #CD5555;
+	text-shadow: 2px 2px 3px #808080;
+}
+/* Left panel */
+.left_side
+{
+	width: 15%;
+	float: left;
+	text-align: right;
+	/*Hide image outside the block*/
+	overflow: hidden;
+}
+.left_side img
+{
+	padding-right: 25px;
+}
+/* Right panel */
+.right_side
+{
+	width: 15%;
+	float: left;
+	margin-bottom: 15px;
+	/*Hide image outside the block*/
+	overflow: hidden;
+}
+.main_page article
+{
+	width: 70%;
+	float: left;
+}
+/* Footer */
+footer
+{
+	clear: both;
+}
+footer table
+{
+	margin-left: 200px;
+	padding: 50px;
+}
+footer table tr td
+{
+	width: 230px;
+	padding: 5px;
+}
+footer table tr td a
+{
+	text-decoration: none;
+	font-size: 16px;
+	color: #8B7D6B;
+}
+footer table tr td a:hover
+{
+	color: #CD5555;
+	text-shadow: 2px 2px 3px #808080;
+}
+.line
+{
+	width: 100%;
+	border-top: 5px double black;
+}
+.copyright
+{
+	font-size: 13px;
+	text-align: right;
+	margin-right: 30px;
+}
+.contact {
+	text-align: center;
+}
+/* Price */
+.price-list h1 {
+	text-align: center;
+	color: red;
+}
+.price-list table {
+	border-collapse: collapse;
+	border: 2px solid black;
+	text-align: center;
+	margin: auto;
+}
+.price-list table tr, .price-list table td, .price-list table th {
+	border: 1px solid black;
+	padding: 5px;
+}
+/* Review */
+.review table {
+	width: 70%;
+	margin: auto;
+	background: url(../images/bc.jpg) repeat;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+}
+.review table td {
+	padding: 15px;
+}
+.review_date {
+	text-align: right;
+}
+.review hr {
+	margin: 20px;
+}
+.button_click {
+	margin-left: 5px;
+	border: none;
+	font-style: italic;
+	color: grey;
+}
+.button_click:focus, .button_click:active {
+	outline: none;
+}
+.block_select table {
+	background-image: none;
+	border-radius: 7px;
+}
+/* Pagination */
+.pagination {
+	text-align: center;
+	padding: 15px;
+}
+.pagination a {
+	text-decoration: none;
+	padding: 5px;
+}
+/* Article */
+.block_article {
+	margin-bottom: 20px;
+	padding: 0px 5px;
+	border: 1px dashed grey;
+}
+.block_article img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	float: left;
+	margin-right: 7px;
+}
+.block_article a {
+	margin-left: 5px;
+	text-decoration: none;
+	color: dimgrey;
+}
+.article h1 {
+	font-size: 26px;
+	text-align: center;
+}
+/* Error 404 */
+.error_404 {
+	font-size: 2vw;
+	text-align: center;
+	color: #CD5555;
+}
+/* Gallery */
+.gallery {
+	padding: 7px;
+	border: 1px solid grey;
+}
+.gallery img {
+	width: 200px;
+	height: 200px;
+	object-fit: cover;
+}
+.gallery figcaption {
+	text-align: center;
+}
+/* Feedback */
+.feedback th {
+	text-align: center;
+}
