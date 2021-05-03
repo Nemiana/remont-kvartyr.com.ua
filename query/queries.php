@@ -615,11 +615,16 @@ function delete_image_article ($id_article) {
     }
 }
 //Counts records in table by its name (for pagination)
-function count_records ($table_name) {
+function count_records ($table_name, $visible) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
+        if ($table_name == 'review_page' && $visible == 0) {
+            $sql = "SELECT COUNT(*) FROM review_page WHERE check_publication = 1";
+        } else {
+            $sql = "SELECT COUNT(*) FROM `$table_name`";
+        }
         //Count all records
-        if ($result = mysqli_query ($link, "SELECT COUNT(*) FROM `$table_name`")) {
+        if ($result = mysqli_query ($link, $sql)) {
             //Result is array with one element with index 0
             $count = mysqli_fetch_row ($result)[0];
             mysqli_free_result ($result);
@@ -638,7 +643,7 @@ function get_article_records ($table_name, $start, $amount) {
     if ($link = require ('/query/connect.php')) {
         //Select some fields of records with limit
         $sql = "SELECT id, title_article, url, text_article, date_publication_article, image_article 
-            FROM `$table_name` LIMIT ?, ?";
+            FROM `$table_name` ORDER BY id DESC LIMIT ?, ?";
         $stmt = mysqli_prepare ($link, $sql);
         mysqli_stmt_bind_param ($stmt, 'dd', $start, $amount);
         mysqli_stmt_execute ($stmt);
@@ -662,12 +667,17 @@ function get_article_records ($table_name, $start, $amount) {
     return $collection;
 }
 //Get range of review records (for pagination)
-function get_review_records ($table_name, $start, $amount) {
+function get_review_records ($table_name, $start, $amount, $visible) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Select some fields of records with limit
-        $sql = "SELECT id, text_review, name_user, date_publication_review, check_publication  
-            FROM `$table_name` LIMIT ?, ?";
+        if ($visible) {
+            $sql = "SELECT id, text_review, name_user, date_publication_review, check_publication  
+            FROM `$table_name` ORDER BY id DESC LIMIT ?, ?";
+        } else {
+            $sql = "SELECT id, text_review, name_user, date_publication_review, check_publication  
+            FROM `$table_name` WHERE check_publication = 1 ORDER BY id DESC LIMIT ?, ?";
+        }
         $stmt = mysqli_prepare ($link, $sql);
         mysqli_stmt_bind_param ($stmt, 'dd', $start, $amount);
         mysqli_stmt_execute ($stmt);

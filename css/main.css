@@ -247,6 +247,11 @@ footer table tr td a:hover
 	text-align: center;
 }
 /* Feedback */
+.feedback table {
+	background: none;
+	border-radius: 5px;
+}
 .feedback th {
 	text-align: center;
+	padding-top: 10px;
 }

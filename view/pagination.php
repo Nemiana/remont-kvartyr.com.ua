@@ -3,10 +3,10 @@
     $current_page;
     $max_page;
     //Setting parameters pagination (table name and elements per page)
-    function set_pagination_parameteres ($table_name, $elements_per_page = 3) {
+    function set_pagination_parameteres ($table_name, $elements_per_page = 3, $visible = 0) {
         global $current_page, $max_page;
         //Amount of all elements
-        $amount_elements = count_records ($table_name);
+        $amount_elements = count_records ($table_name, $visible);
         //Last page
         $max_page = ceil((int)$amount_elements / $elements_per_page);
         //If GET-parameter transferred
@@ -32,7 +32,7 @@
         if ($table_name == 'article_page') {
             $collection = get_article_records ($table_name, $start, $amount);
         } else if ($table_name == 'review_page') {
-            $collection = get_review_records ($table_name, $start, $amount);
+            $collection = get_review_records ($table_name, $start, $amount, $visible);
         }
         return $collection;
     }

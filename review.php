@@ -34,7 +34,7 @@
         //Table for work from DB
         $table_name = 'review_page';
         //Set pagination parameters and return actual collection
-        $reviews = set_pagination_parameteres($table_name, $elements_per_page);
+        $reviews = set_pagination_parameteres($table_name, $elements_per_page, 0);
         //Collection may be empty
         if ($reviews) {
             $index = 0;
@@ -57,25 +57,39 @@
         pagination ('/review/page');
     ?>
     <!-- Form for feedback -->
-    <form method="POST" action="/admin/feedback.php">
-        <div class="feedback">
-            <table>
-                <tr>
-                    <th colspan="2">Залиште свій відгук</th>
-                </tr>
-                <tr>
-                    <td><label for="name_user">Ім'я<td>
-                    <td><input type="text" name="name_user" required><td>
-                </tr>
-                <tr>
-                    <td><label for="text_review">Текст<td>
-                    <td><textarea name="text_review" cols="70" rows="10" required></textarea><td>
-                </tr>
-                <tr>
-                    <td><button type="submit">Відправити</button></td>
-                </tr>
-            </table>
-        </div>
+    <form class="feedback" method="POST" action="/feedback">
+        <table>
+            <tr>
+                <th colspan="3">Залиште свій відгук</th>
+            </tr>
+            <tr>
+                <td><label for="name_user">Ім'я</label></td>
+                <td colspan="2"><input type="text" name="name_user" required></td>
+            </tr>
+            <tr>
+                <td><label for="text_review">Текст</label></td>
+                <td colspan="2"><textarea name="text_review" cols="70" rows="10" required></textarea></td>
+            </tr>
+            <tr>
+                <?php
+                    $captcha_images = parse_ini_file ('/config/captcha.php');
+                    $current_image = array_keys ($captcha_images) [rand (0, count($captcha_images) - 1)];
+                ?>
+                <td>
+                    <img src="/captcha/<?= $current_image ?>.png" class="img_captcha">
+                    <input type="hidden" name="image" class="name_captcha" value="<?= $current_image ?>">
+                </td>
+                <td style="width: 50px;">
+                    <input type="text" name="captcha" class="captcha" size="3" required>
+                </td>
+                <td>
+                    <input type="image" src="/images/upd_icon.png" class="update_captcha" alt="update" title="Оновити">
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3"><button type="submit">Відправити</button></td>
+            </tr>
+        </table>
     </form>
     <!---->
 </article>
@@ -94,5 +108,6 @@
     //function from JS
     reveal_collapse_text(lengthReview, reviewText);
 </script>
+<script src="/js/update_captcha.js"></script>
 <?php
     require_once ('/view/view_footer.php');

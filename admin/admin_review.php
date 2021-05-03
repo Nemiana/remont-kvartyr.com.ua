@@ -67,7 +67,7 @@
                     //Table for work from DB
                     $table_name = 'review_page';
                     //Set pagination parameters and return actual collection
-                    $reviews = set_pagination_parameteres($table_name, $elements_per_page);
+                    $reviews = set_pagination_parameteres($table_name, $elements_per_page, 1);
                     //Collection may be empty
                     if ($reviews) {
                         $index = 0;
