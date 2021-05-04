@@ -5,7 +5,7 @@
     //Setting parameters pagination (table name and elements per page)
     function set_pagination_parameteres ($table_name, $elements_per_page = 3, $visible = 0) {
         global $current_page, $max_page;
-        //Amount of all elements
+        //Amount of all or available elements (visible true or false)
         $amount_elements = count_records ($table_name, $visible);
         //Last page
         $max_page = ceil((int)$amount_elements / $elements_per_page);

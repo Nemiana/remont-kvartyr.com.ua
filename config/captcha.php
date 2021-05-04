@@ -1,5 +1,6 @@
 ;<?php exit(); ?>
 
+;pairs of image names and correct answers
 captcha1 = 9;
 captcha2 = 8;
 captcha3 = -1;

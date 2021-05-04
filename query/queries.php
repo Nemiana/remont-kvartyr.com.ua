@@ -618,8 +618,10 @@ function delete_image_article ($id_article) {
 function count_records ($table_name, $visible) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
+        //For page review show only available records
         if ($table_name == 'review_page' && $visible == 0) {
             $sql = "SELECT COUNT(*) FROM review_page WHERE check_publication = 1";
+        //For others - show all
         } else {
             $sql = "SELECT COUNT(*) FROM `$table_name`";
         }
@@ -641,7 +643,7 @@ function count_records ($table_name, $visible) {
 function get_article_records ($table_name, $start, $amount) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
-        //Select some fields of records with limit
+        //Select some fields of records with limit in reverse order
         $sql = "SELECT id, title_article, url, text_article, date_publication_article, image_article 
             FROM `$table_name` ORDER BY id DESC LIMIT ?, ?";
         $stmt = mysqli_prepare ($link, $sql);
@@ -670,10 +672,12 @@ function get_article_records ($table_name, $start, $amount) {
 function get_review_records ($table_name, $start, $amount, $visible) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
-        //Select some fields of records with limit
+        //Select some fields of records with limit in reverse order
+        //For admin page review
         if ($visible) {
             $sql = "SELECT id, text_review, name_user, date_publication_review, check_publication  
             FROM `$table_name` ORDER BY id DESC LIMIT ?, ?";
+        //For page review (only available records)
         } else {
             $sql = "SELECT id, text_review, name_user, date_publication_review, check_publication  
             FROM `$table_name` WHERE check_publication = 1 ORDER BY id DESC LIMIT ?, ?";

@@ -70,6 +70,7 @@
                     $reviews = set_pagination_parameteres($table_name, $elements_per_page, 1);
                     //Collection may be empty
                     if ($reviews) {
+                        //For JS reveal and collapse long text
                         $index = 0;
                         //Output short reviews
                         foreach ($reviews as $item) {
@@ -109,6 +110,7 @@
             ?>
         </div>
     </article>
+    <!-- Choses amount records per page for pagination -->
     <script src="/js/amount_per_page.js"></script>
     <script>
         //Save to cookie chosen amount
@@ -124,6 +126,7 @@
         //function from JS
         reveal_collapse_text(lengthReview, reviewText);
     </script>
+    <!-- Deleting record by click -->
     <script src="/admin/js/delete_review.js"></script>
 </body>
 </html>

@@ -1,12 +1,16 @@
-<?php 
+<?php
     require_once ('/view/view_header.php');
     require_once ('/query/queries.php');
 ?>
 <article class="review">
     <?php
+        //If was request POST
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        //Parse captcha config file
         $captcha = parse_ini_file ('/config/captcha.php');
+        //If sended value equal captcha value from file
         if ($_POST['captcha'] == $captcha [$_POST['image']]) {
+            //Adds invisible new review to DB for post-moderation
             add_review ([
                 'text_review' => $_POST['text_review'], 
                 'name_user' => $_POST['name_user'],
@@ -14,12 +18,14 @@
                 'check_publication' => 0
                 ]);
     ?>
+        <!-- Success message -->
         <p style="text-align: center; font-weight: bold">Ваш відгук відправлено на модерацію. Повернутися до <a href="/review">списку відгуків</a>?</p>
     <?php
         } else {
     ?>
+            <!-- If captcha was incorrect, shows warning message and form for adding review -->
             <p style="color: red; text-align: center;">Неправильно заповнена капча! Спробуйте ще раз.</p>
-            <!-- Form for feedback -->
+            <!-- Form for feedback with remembering fields -->
             <form class="feedback" method="POST" action="/feedback">
                 <table>
                     <tr>
@@ -35,6 +41,7 @@
                     </tr>
                     <tr>
                         <?php
+                            //Show new random captcha
                             $current_image = array_keys ($captcha) [rand (0, count($captcha) - 1)];
                         ?>
                         <td>
@@ -42,9 +49,11 @@
                             <input type="hidden" name="image" class="name_captcha" value="<?= $current_image ?>">
                         </td>
                         <td style="width: 50px;">
+                            <!-- Field for input captcha -->
                             <input type="text" name="captcha" size="3" required>
                         </td>
                         <td>
+                            <!-- Update captcha button -->
                             <input type="image" src="/images/upd_icon.png" class="update_captcha" alt="update" title="Оновити">
                         </td>
                     </tr>
@@ -59,6 +68,7 @@
     }
     ?>
 </article>
+<!-- Update captcha by click -->
 <script src="/js/update_captcha.js"></script>
 <?php
     require_once ('/view/view_footer.php');

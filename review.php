@@ -37,6 +37,7 @@
         $reviews = set_pagination_parameteres($table_name, $elements_per_page, 0);
         //Collection may be empty
         if ($reviews) {
+            //For JS reveal and collapse long text
             $index = 0;
             //Output short reviews
             foreach ($reviews as $item) {
@@ -72,17 +73,23 @@
             </tr>
             <tr>
                 <?php
+                    //Parse image names from config file
                     $captcha_images = parse_ini_file ('/config/captcha.php');
+                    //Return random name
                     $current_image = array_keys ($captcha_images) [rand (0, count($captcha_images) - 1)];
                 ?>
                 <td>
+                    <!-- Path to captcha image -->
                     <img src="/captcha/<?= $current_image ?>.png" class="img_captcha">
+                    <!-- Image name to check result -->
                     <input type="hidden" name="image" class="name_captcha" value="<?= $current_image ?>">
                 </td>
                 <td style="width: 50px;">
+                    <!-- Field for input captcha -->
                     <input type="text" name="captcha" class="captcha" size="3" required>
                 </td>
                 <td>
+                    <!-- Updates captcha input -->
                     <input type="image" src="/images/upd_icon.png" class="update_captcha" alt="update" title="Оновити">
                 </td>
             </tr>
@@ -93,6 +100,7 @@
     </form>
     <!---->
 </article>
+<!-- Choses amount records per page for pagination -->
 <script src="/js/amount_per_page.js"></script>
 <script>
     //Save to cookie chosen amount
@@ -108,6 +116,7 @@
     //function from JS
     reveal_collapse_text(lengthReview, reviewText);
 </script>
+<!-- Update captcha by click -->
 <script src="/js/update_captcha.js"></script>
 <?php
     require_once ('/view/view_footer.php');
