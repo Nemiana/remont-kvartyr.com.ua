@@ -818,3 +818,274 @@ function delete_review ($id_review) {
         $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
     }
 }
+//Get range of gallery records (for pagination)
+function get_gallery_records ($table_name, $start, $amount) {
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+        //Select some fields of records with limit in reverse order
+        $sql = "SELECT id, object_name, object_start_image 
+            FROM `$table_name` ORDER BY id DESC LIMIT ?, ?";
+        $stmt = mysqli_prepare ($link, $sql);
+        mysqli_stmt_bind_param ($stmt, 'dd', $start, $amount);
+        mysqli_stmt_execute ($stmt);
+        mysqli_stmt_bind_result($stmt, $id, $object_name, $object_start_image);
+        //Extract records in loop and adds to collection
+        while (mysqli_stmt_fetch($stmt)) {
+            $collection[] = [
+                            'id' => $id, 
+                            'object_name' => $object_name,
+                            'object_start_image' => $object_start_image
+                            ];
+        }
+        mysqli_stmt_close($stmt);
+        mysqli_close ($link);
+    } else {
+        $collection = [];
+    }
+    return $collection;
+}
+//Delete gallery object by id
+function delete_gallery ($id_gallery) {
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+        //Delete article from DB by id
+        if ($result = mysqli_query ($link, "DELETE FROM gallery_page WHERE id = '$id_gallery'")) {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'success';
+            $_SESSION['text_message'] = 'Об\'єкт галереї видалено';
+            mysqli_free_result ($result);
+        } else {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'fail';
+            $_SESSION['text_message'] = 'Не вдалося видалити об\'єкт галереї';
+        }
+        mysqli_close ($link);
+    } else {
+        //Sets info message into session
+        $_SESSION['type_message'] = 'fail';
+        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+    }
+}
+//Get gallery object by id from DB
+function get_gallery ($id_gallery) {
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+        //Fields names from table for associative array
+        $array_keys = ['id', 'object_name', 'object_start_image'];
+        //Check record with received id
+        $result = mysqli_query($link, "SELECT 1 FROM gallery_page WHERE id  = '$id_gallery'");
+        //If record exists
+        if (mysqli_fetch_row ($result)){
+            //Free memory
+            mysqli_free_result ($result);
+            //Get all record from DB
+            $result = mysqli_query($link, "SELECT * FROM gallery_page WHERE id  = '$id_gallery'");
+            $result_gallery = mysqli_fetch_row ($result);
+            //Combine array of keys and array of values (to get an associative array)
+            $gallery = array_combine ($array_keys, $result_gallery);
+            //Free memory again
+            mysqli_free_result ($result);
+        } else {
+            //If record not exists, return empty associative array with keys
+            $gallery = array_fill_keys ($array_keys, '');
+            mysqli_free_result ($result);
+        };
+        mysqli_close ($link);
+        return $gallery;
+    } else {
+        //Sets info message into session
+        $_SESSION['type_message'] = 'fail';
+        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+    }
+}
+//
+function get_gallery_images ($id_gallery) {
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+        //Fields names from table for associative array
+        $array_keys = ['id', 'object_id', 'object_image', 'image_description'];
+        //Check record with received id
+        $result = mysqli_query($link, "SELECT 1 FROM gallery_objects WHERE object_id  = '$id_gallery'");
+        //If at least one record exists
+        if (mysqli_fetch_row ($result)){
+            //Free memory
+            mysqli_free_result ($result);
+            //Get all records from DB
+            $result = mysqli_query($link, "SELECT * FROM gallery_objects WHERE object_id  = '$id_gallery'");
+            while ($result_gallery = mysqli_fetch_row ($result)) {
+                $gallery[] = array_combine ($array_keys, $result_gallery);
+            }
+            //Free memory again
+            mysqli_free_result ($result);
+        } else {
+            //If record not exists, return empty string
+            $gallery = '';
+            mysqli_free_result ($result);
+        };
+        mysqli_close ($link);
+        return $gallery;
+    } else {
+        //Sets info message into session
+        $_SESSION['type_message'] = 'fail';
+        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+    }
+}
+//Addition new gallery object to table of DB
+function add_gallery ($array_data) {
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+        $sql = "INSERT INTO gallery_page (object_name, object_start_image) VALUES (?, ?)";
+        //Prepare and bind parameters
+        $stmt = mysqli_prepare ($link, $sql);
+        mysqli_stmt_bind_param ($stmt, 'ss', $array_data['object_name'], $array_data['object_start_image']);
+        if (mysqli_stmt_execute ($stmt)) {
+            //Delete statement and sql variables for next using
+            unset ($stmt, $sql);
+
+            $sql = "SELECT id FROM gallery_page WHERE object_name = ? AND object_start_image = ?";
+            $stmt = mysqli_prepare ($link, $sql);
+            mysqli_stmt_bind_param ($stmt, 'ss', $array_data['object_name'], $array_data['object_start_image']);
+            if (mysqli_stmt_execute ($stmt)) {
+                mysqli_stmt_bind_result($stmt, $id_gallery);
+                mysqli_stmt_fetch($stmt);
+                unset ($stmt, $sql);
+            } else {
+                $id_gallery = 0;
+            }
+
+            $sql = "INSERT INTO gallery_objects (object_id, object_image, image_description) VALUES (?, ?, ?)";
+            //Prepare and bind parameters
+            $stmt = mysqli_prepare ($link, $sql);
+            if ($array_data['object_image']) {
+                for ($i = 0; $i < count ($array_data['object_image']); $i++) {
+                    mysqli_stmt_bind_param ($stmt, 'sss', $id_gallery, $array_data['object_image'][$i], $array_data['image_description'][$i]);
+                    mysqli_stmt_execute ($stmt);
+                }
+            }   
+            //Sets info message into session
+            $_SESSION['type_message'] = 'success';
+            $_SESSION['text_message'] = 'Об\'єкт галереї додано';
+        } else {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'fail';
+            $_SESSION['text_message'] = 'Не вдалося додати об\'єкт галереї';
+        }
+        mysqli_stmt_close($stmt);
+        mysqli_close ($link);
+        } else {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'fail';
+            $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        }
+}
+//Save modified gallery object to DB
+function save_gallery ($array_data) {
+    $id_gallery = $array_data['id_gallery_object'];
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+
+        //If image selection made, upgrade record in DB (else not touch image!)
+        if ($array_data['object_start_image']) {
+            $sql = "UPDATE gallery_page SET object_start_image = ? WHERE id = '$id_gallery'";
+            $stmt = mysqli_prepare ($link, $sql);
+            mysqli_stmt_bind_param ($stmt, 's', $array_data['object_start_image']);
+            mysqli_stmt_execute ($stmt);
+            unset ($stmt, $sql);
+        }
+
+        $sql = "UPDATE gallery_page SET object_name = ? WHERE id = '$id_gallery'";
+        //Prepare and bind parameters
+        $stmt = mysqli_prepare ($link, $sql);
+        mysqli_stmt_bind_param ($stmt, 's', $array_data['object_name']);
+        if (mysqli_stmt_execute ($stmt)) {
+
+            if ($array_data['object_image']) {
+                for ($i = 0; $i < count ($array_data['object_image']); $i++) {
+                    if ($array_data['id_gallery_image'][$i] > 0) {
+                        $id_image = $array_data['id_gallery_image'][$i];
+
+                        //If image selection made, upgrade record in DB (else not touch image!)
+                        if ($array_data['object_image'][$i]) {
+                            $sql = "UPDATE gallery_objects SET object_image = ? WHERE id = '$id_image'";
+                            $stmt = mysqli_prepare ($link, $sql);
+                            mysqli_stmt_bind_param ($stmt, 's', $array_data['object_image'][$i]);
+                            mysqli_stmt_execute ($stmt);
+                            unset ($stmt, $sql);
+                        }
+
+
+                        $sql = "UPDATE gallery_objects SET object_id = ?, image_description = ? WHERE id = '$id_image'";
+                        //Prepare and bind parameters
+                        $stmt = mysqli_prepare ($link, $sql);
+                        mysqli_stmt_bind_param ($stmt, 'ss', $id_gallery, $array_data['image_description'][$i]);
+                        mysqli_stmt_execute ($stmt);
+                        unset ($stmt, $sql);
+                    } else {
+                        $sql = "INSERT INTO gallery_objects (object_id, object_image, image_description) VALUES (?, ?, ?)";
+                        //Prepare and bind parameters
+                        $stmt = mysqli_prepare ($link, $sql);
+                        mysqli_stmt_bind_param ($stmt, 'sss', $id_gallery, $array_data['object_image'][$i], $array_data['image_description'][$i]);
+                        mysqli_stmt_execute ($stmt);
+                        unset ($stmt, $sql);
+                    }
+                    
+                }
+            }
+            //Sets info message into session
+            $_SESSION['type_message'] = 'success';
+            $_SESSION['text_message'] = 'Об\'єкт галереї додано';
+        } else {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'fail';
+            $_SESSION['text_message'] = 'Не вдалося додати об\'єкт галереї';
+        }
+        //mysqli_stmt_close($stmt);
+        mysqli_close ($link);
+        } else {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'fail';
+            $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        }
+}
+//Delete start image from gallery object by id
+function delete_gallery_start_image ($id_gallery) {
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+        //Clear field with image in record
+        if ($result = mysqli_query ($link, "UPDATE gallery_page SET object_start_image = '' WHERE id = '$id_gallery'")) {
+            $_SESSION['type_message'] = 'success';
+            $_SESSION['text_message'] = 'Зображення видалено';
+            mysqli_free_result ($result);
+        } else {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'fail';
+            $_SESSION['text_message'] = 'Не вдалося видалити зображення';
+        }
+        mysqli_close ($link);
+    } else {
+        //Sets info message into session
+        $_SESSION['type_message'] = 'fail';
+        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+    }
+}
+//
+function delete_gallery_image ($id_image) {
+    //Connect to DB
+    if ($link = require ('/query/connect.php')) {
+        //Clear field with image in record
+        if ($result = mysqli_query ($link, "DELETE FROM gallery_objects WHERE id = '$id_image'")) {
+            $_SESSION['type_message'] = 'success';
+            $_SESSION['text_message'] = 'Фото видалено';
+            mysqli_free_result ($result);
+        } else {
+            //Sets info message into session
+            $_SESSION['type_message'] = 'fail';
+            $_SESSION['text_message'] = 'Не вдалося видалити фото';
+        }
+        mysqli_close ($link);
+    } else {
+        //Sets info message into session
+        $_SESSION['type_message'] = 'fail';
+        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+    }
+}

@@ -148,3 +148,12 @@ nav ul li a:hover
 .review_text {
 	text-align: left !important;
 }
+/* Gallery */
+.edit_gallery img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+}
+/*.edit_gallery td {
+	border: 1px solid black;
+}*/

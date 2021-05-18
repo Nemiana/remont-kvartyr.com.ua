@@ -33,6 +33,8 @@
             $collection = get_article_records ($table_name, $start, $amount);
         } else if ($table_name == 'review_page') {
             $collection = get_review_records ($table_name, $start, $amount, $visible);
+        } else if ($table_name == 'gallery_page') {
+            $collection = get_gallery_records ($table_name, $start, $amount);
         }
         return $collection;
     }

@@ -2,7 +2,7 @@ AddDefaultCharset UTF-8
 #Error page
 ErrorDocument 404 /view/error_404.php
 #Include path for PHP
-php_value include_path "E:\Nemi documents\Programming\OpenServer\domains\remont-kvartyr.com.ua"
+php_value include_path "D:\Nemi documents\Programming\OpenServer\domains\remont-kvartyr.com.ua"
 Options +FollowSymLinks
 RewriteEngine On
 
@@ -35,3 +35,5 @@ RewriteRule ^gallery/([^/]+)$ view/view_gallery.php?title=$1 [L]
 RewriteRule admin/admin_article.php/page([0-9]+)$ admin/admin_article.php?page=$1 [L]
 #Pagination admin review
 RewriteRule admin/admin_review.php/page([0-9]+)$ admin/admin_review.php?page=$1 [L]
+#Pagination admin gallery
+RewriteRule admin/admin_gallery.php/page([0-9]+)$ admin/admin_gallery.php?page=$1 [L]

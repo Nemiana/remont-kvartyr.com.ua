@@ -234,8 +234,15 @@ footer table tr td a:hover
 	color: #CD5555;
 }
 /* Gallery */
+.gallery_article table {
+	margin: auto;
+}
+.gallery_table td {
+	padding: 10px;
+}
 .gallery {
-	padding: 7px;
+	text-align: center;
+	padding: 10px;
 	border: 1px solid grey;
 }
 .gallery img {
@@ -245,6 +252,9 @@ footer table tr td a:hover
 }
 .gallery figcaption {
 	text-align: center;
+}
+.gallery_caption {
+	width: 200px;
 }
 /* Feedback */
 .feedback table {

@@ -4,15 +4,15 @@ $('.delete_start_image').click(function (event) {
     //Undo the default action (go to a new page)
     event.preventDefault();
     $.ajax({
-        url: '/admin/delete_image.php',
+        url: '/admin/delete_start_image.php',
         method: 'post',
         dataType: 'html',
         data: {
-            id: $('.delete_image').data('id_article'),
+            id: $('.delete_start_image').data('id_gallery'),
         },
         //If ok, delete src attribute from image
         success: function () {
-            $('.image_article').attr('src', '');
+            $('.object_start_image').attr('src', '');
         }
     });
 });

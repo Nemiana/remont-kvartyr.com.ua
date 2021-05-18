@@ -51,7 +51,7 @@
             object_id INT,
             object_image VARCHAR(255),
             image_description TEXT,
-            FOREIGN KEY (object_id) REFERENCES gallery_page(id)
+            FOREIGN KEY (object_id) REFERENCES gallery_page(id) ON DELETE CASCADE
         )";
         $result = mysqli_query ($link, $sql);
         if ($result == false) echo 'Table gallery_objects: ' . mysqli_error ($link);
