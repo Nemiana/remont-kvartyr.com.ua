@@ -20,7 +20,7 @@
                     //Image + caption
                     echo "<td>
                             <div class='gallery'>
-                                <img src='/gallery_images/{$gallery_images[$i]['object_image']}'>
+                                <img class='gallery_image' src='/gallery_images/{$gallery_images[$i]['object_image']}'>
                                 <div class='gallery_caption'>{$gallery_images[$i]['image_description']}</div>
                             </div>
                         </td>";
@@ -30,6 +30,17 @@
         }
         echo '</table>';
     ?>
+
+    <!-- The overlay for modal window -->
+    <div class="overlay">
+        <!-- Modal window with form for addition new record -->
+        <div class="resize_image">
+            <button class="close">X</button>
+            <img class="full_image" src ="">
+        </div>
+    </div>
 </article>
+
+<script src="/js/resize_image.js"></script>
 <?php
     require_once ('/view/view_footer.php');
