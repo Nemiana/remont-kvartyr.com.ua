@@ -29,7 +29,7 @@
         <!-- Selection amount gallery objects per page -->
         <table>
             <tr>
-                <td><label for="amount_gallery_admin">Кількість статей на сторінці: </td>
+                <td><label for="amount_gallery_admin">Кількість об'єктів на сторінці: </td>
                 <td>
                     <select class="amount_gallery_admin" name="amount_gallery_admin">
                         <!-- Default value, allows you to select the first value 3 -->
@@ -66,7 +66,7 @@
                 ?>
                 <tr>
                     <td>
-                        <!-- Block gallery object -->
+                        <!-- Block of gallery object -->
                         <a href="/admin/edit_gallery.php?id=<?= $item['id'] ?>">
                             <div class='gallery'>
                                 <img src='/gallery_images/<?= $item['object_start_image'] ?>'>

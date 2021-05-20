@@ -8,7 +8,7 @@
     $id_gallery = $_GET['id'];
     //Get gallery object form DB by id
     $gallery_object = get_gallery ($id_gallery);
-    //
+    //Get all images of object gallery
     $gallery_images = get_gallery_images ($id_gallery);
     //If id = 0 - addition gallery object, else edit and save gallery object (title page and name submit button)
     $title_page = $id_gallery > 0 ? 'Редагування об\'єкта галереї' : 'Додавання об\'єкта галереї';
@@ -52,6 +52,7 @@
                 </tr>
             </table>
                 <?php
+                    //Collection of images in separate tables for comfort deleting
                     if ($gallery_images) {
                         foreach ($gallery_images as $item) {
                             if (isset($item)) {
@@ -80,6 +81,7 @@
                     }
                 }
                 ?>
+            <!-- Block with buttons for adding new image and save all changes -->
             <table class="edit_gallery">
                 <tr>
                     <td><button type="button" class="add_image">Додати фото</button></td>
@@ -88,7 +90,9 @@
             </table>
         </form>
     </article>
-
+    <!-- Script for deleting only start image -->
     <script src="/admin/js/delete_start_image.js"></script>
+    <!-- Script for deleting whole image (not start) with caption -->
     <script src="/admin/js/delete_object_image.js"></script>
+    <!-- Script for adding block of code for uploading new image and caption -->
     <script src="/admin/js/add_gallery_image.js"></script>

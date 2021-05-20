@@ -1,4 +1,5 @@
 'use strict'
+//Adding block of code for upload image
 let addButton = document.querySelector('.add_image');
 addButton.addEventListener('click', function () {
     let htmlAdd = `<table class="edit_gallery">

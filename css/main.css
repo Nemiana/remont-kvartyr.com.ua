@@ -250,9 +250,6 @@ footer table tr td a:hover
 	height: 200px;
 	object-fit: cover;
 }
-.gallery figcaption {
-	text-align: center;
-}
 .gallery_caption {
 	width: 200px;
 }
@@ -291,7 +288,7 @@ footer table tr td a:hover
 	opacity: 1;
 }
 .resize_image button {
-	position: fixed;
-	top: 20%;
-	left: 20%;
+	position: absolute;
+	top: 0;
+	right: 0;
 }

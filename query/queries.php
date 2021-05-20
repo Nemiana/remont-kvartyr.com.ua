@@ -848,7 +848,7 @@ function get_gallery_records ($table_name, $start, $amount) {
 function delete_gallery ($id_gallery) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
-        //Delete article from DB by id
+        //Delete gallery object from DB by id
         if ($result = mysqli_query ($link, "DELETE FROM gallery_page WHERE id = '$id_gallery'")) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
@@ -898,7 +898,7 @@ function get_gallery ($id_gallery) {
         $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
     }
 }
-//
+//Get images array of gallery object by object id
 function get_gallery_images ($id_gallery) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
@@ -934,6 +934,7 @@ function get_gallery_images ($id_gallery) {
 function add_gallery ($array_data) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
+        //Insert new gallery object
         $sql = "INSERT INTO gallery_page (object_name, object_start_image) VALUES (?, ?)";
         //Prepare and bind parameters
         $stmt = mysqli_prepare ($link, $sql);
@@ -941,22 +942,25 @@ function add_gallery ($array_data) {
         if (mysqli_stmt_execute ($stmt)) {
             //Delete statement and sql variables for next using
             unset ($stmt, $sql);
-
+            //Receive id just added object
             $sql = "SELECT id FROM gallery_page WHERE object_name = ? AND object_start_image = ?";
             $stmt = mysqli_prepare ($link, $sql);
             mysqli_stmt_bind_param ($stmt, 'ss', $array_data['object_name'], $array_data['object_start_image']);
             if (mysqli_stmt_execute ($stmt)) {
+                //Remember object id and unset variables
                 mysqli_stmt_bind_result($stmt, $id_gallery);
                 mysqli_stmt_fetch($stmt);
                 unset ($stmt, $sql);
             } else {
                 $id_gallery = 0;
             }
-
+            //Inserting images of gallery object in second table by object id (foreign key)
             $sql = "INSERT INTO gallery_objects (object_id, object_image, image_description) VALUES (?, ?, ?)";
             //Prepare and bind parameters
             $stmt = mysqli_prepare ($link, $sql);
+            //Image may be without description
             if ($array_data['object_image']) {
+                //Inserting records to table in cycle
                 for ($i = 0; $i < count ($array_data['object_image']); $i++) {
                     mysqli_stmt_bind_param ($stmt, 'sss', $id_gallery, $array_data['object_image'][$i], $array_data['image_description'][$i]);
                     mysqli_stmt_execute ($stmt);
@@ -983,7 +987,6 @@ function save_gallery ($array_data) {
     $id_gallery = $array_data['id_gallery_object'];
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
-
         //If image selection made, upgrade record in DB (else not touch image!)
         if ($array_data['object_start_image']) {
             $sql = "UPDATE gallery_page SET object_start_image = ? WHERE id = '$id_gallery'";
@@ -992,18 +995,18 @@ function save_gallery ($array_data) {
             mysqli_stmt_execute ($stmt);
             unset ($stmt, $sql);
         }
-
+        //Change name of gallery object
         $sql = "UPDATE gallery_page SET object_name = ? WHERE id = '$id_gallery'";
         //Prepare and bind parameters
         $stmt = mysqli_prepare ($link, $sql);
         mysqli_stmt_bind_param ($stmt, 's', $array_data['object_name']);
         if (mysqli_stmt_execute ($stmt)) {
-
+            //If object has at least one image, iterate them in cycle
             if ($array_data['object_image']) {
                 for ($i = 0; $i < count ($array_data['object_image']); $i++) {
+                    //If current image exists (not new!)
                     if ($array_data['id_gallery_image'][$i] > 0) {
                         $id_image = $array_data['id_gallery_image'][$i];
-
                         //If image selection made, upgrade record in DB (else not touch image!)
                         if ($array_data['object_image'][$i]) {
                             $sql = "UPDATE gallery_objects SET object_image = ? WHERE id = '$id_image'";
@@ -1012,8 +1015,7 @@ function save_gallery ($array_data) {
                             mysqli_stmt_execute ($stmt);
                             unset ($stmt, $sql);
                         }
-
-
+                        //Update other fields (except image)
                         $sql = "UPDATE gallery_objects SET object_id = ?, image_description = ? WHERE id = '$id_image'";
                         //Prepare and bind parameters
                         $stmt = mysqli_prepare ($link, $sql);
@@ -1021,6 +1023,7 @@ function save_gallery ($array_data) {
                         mysqli_stmt_execute ($stmt);
                         unset ($stmt, $sql);
                     } else {
+                        //Adding new image
                         $sql = "INSERT INTO gallery_objects (object_id, object_image, image_description) VALUES (?, ?, ?)";
                         //Prepare and bind parameters
                         $stmt = mysqli_prepare ($link, $sql);
@@ -1041,11 +1044,11 @@ function save_gallery ($array_data) {
         }
         //mysqli_stmt_close($stmt);
         mysqli_close ($link);
-        } else {
-            //Sets info message into session
-            $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
-        }
+    } else {
+        //Sets info message into session
+        $_SESSION['type_message'] = 'fail';
+        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+    }
 }
 //Delete start image from gallery object by id
 function delete_gallery_start_image ($id_gallery) {
@@ -1068,11 +1071,11 @@ function delete_gallery_start_image ($id_gallery) {
         $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
     }
 }
-//
+//Delete image from gallery object by image id
 function delete_gallery_image ($id_image) {
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
-        //Clear field with image in record
+        //Delete image record by image id
         if ($result = mysqli_query ($link, "DELETE FROM gallery_objects WHERE id = '$id_image'")) {
             $_SESSION['type_message'] = 'success';
             $_SESSION['text_message'] = 'Фото видалено';

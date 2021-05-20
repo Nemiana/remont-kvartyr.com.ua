@@ -9,5 +9,5 @@
         header('Location: /admin/');
         exit();
     };
-    //Call function to delete image from DB
+    //Call function to delete start image of gallery object from DB
     delete_gallery_start_image ($_POST['id']);
