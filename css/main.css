@@ -1,14 +1,11 @@
-*
-{
+* {
 	font-family: Arial, Geneva, Helvetica, sans-serif;
 }
 /* Header */
-header, nav ul
-{
+header, nav ul {
 	text-align: center;
 }
-.header_title
-{
+.header_title {
 	display: inline;
 	position: relative;
 	top: -25px;
@@ -17,36 +14,29 @@ header, nav ul
 	font-size: 3vw;
 	color: red;
 }
-.header_contact
-{
+.header_contact {
 	float: right;
 	position: relative;
 	right: 30px;
 }
-.img-phone
-{
+.img-phone {
 	position: relative;
 	top: 20px;
 }
-header div span
-{
+header div span {
 	margin: -20px;
 }
-.lang
-{
+.lang {
 	position: absolute;
 	left: 10px;
 	top: 10px;
 }
-header button
-{
-	padding: 0;
-	width: 34px;
-	height: 25px;
-}
-.rus
-{
+.rus, .eng {
 	margin-left:-4px;
+}
+.lang_active {
+	height: 19px;
+	border: 2px solid black;	
 }
 /* Go top button */
 #go-top {

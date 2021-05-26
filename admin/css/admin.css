@@ -1,6 +1,12 @@
 * {
 	font-family: Arial, Geneva, Helvetica, sans-serif;
 }
+/* Languages */
+.admin_lang {
+	position: absolute;
+	left: 10px;
+	top: 18px;
+}
 /* Page login */
 .login table {
     margin: auto;
@@ -11,23 +17,19 @@
     padding: 7px;
 }
 /* Navigation */
-nav ul
-{
+nav ul {
 	border: 1px solid black;
 }
-nav ul li
-{
+nav ul li {
 	display: inline;
     margin: 4vw;
 }
-nav ul li a
-{
+nav ul li a {
 	text-decoration: none;
 	font-size: 24px;
 	color: black;
 }
-nav ul li a:hover
-{
+nav ul li a:hover {
 	color: #CD5555;
 	text-shadow: 2px 2px 3px #808080;
 }

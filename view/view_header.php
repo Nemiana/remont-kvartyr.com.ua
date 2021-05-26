@@ -1,3 +1,12 @@
+<?php
+    if ($_COOKIE['lang'] == 'rus') {
+        $translate = parse_ini_file ('/config/rus.php');
+    } else if ($_COOKIE['lang'] == 'eng') {
+        $translate = parse_ini_file ('/config/eng.php');
+    } else {
+        $translate = parse_ini_file ('/config/ukr.php');
+    }
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,11 +23,12 @@
 </head>
 <body lang="uk">
     <!-- HEADER -->
-	<header>
+	<header class="header">
 		<div class="lang">
-			<button class="ukr"><img src="/images/ukr_flag.png" alt="Українська" width="30px"></button>
-			<button class="rus"><img src="/images/rus_flag.png" alt="Русский" width="30px"></button>
-		</div>
+            <input type="image" class="ukr<?php if ($_COOKIE['lang'] == 'ukr' || !isset($_COOKIE['lang'])) echo ' lang_active'; ?>" src="/images/ukr_flag.png" title="Українська" alt="Українська">
+            <input type="image" class="rus<?php if ($_COOKIE['lang'] == 'rus') echo ' lang_active'; ?>" src="/images/rus_flag.png" title="Русский" alt="Русский">
+            <input type="image" class="eng<?php if ($_COOKIE['lang'] == 'eng') echo ' lang_active'; ?>" src="/images/eng_flag.png" title="English" alt="English">
+        </div>
 		<a href="/"><img src="/images/logo.png" alt="Логотип" width="100px"></a>
 		<h1 class="header_title">Ремонт квартир і будинків</h1>
 		<div class="header_contact"><img src="/images/title_contact.png" alt="Контакти" width="170px"></div>
@@ -27,12 +37,12 @@
     <!-- MENU -->
     <nav>
         <ul>
-            <li><a href="/index">Головна</a></li>
-            <li><a href="/price-list">Прайс</a></li>
-			<li><a href="/gallery">Галерея</a></li>
-			<li><a href="/article">Статті</a></li>
-            <li><a href="/review">Відгуки</a></li>
-            <li><a href="/contact">Контакти</a></li>
+            <li><a href="/index"><?= $translate['main_menu_home'] ?></a></li>
+            <li><a href="/price-list"><?= $translate['main_menu_price'] ?></a></li>
+			<li><a href="/gallery"><?= $translate['main_menu_gallery'] ?></a></li>
+			<li><a href="/article"><?= $translate['main_menu_article'] ?></a></li>
+            <li><a href="/review"><?= $translate['main_menu_review'] ?></a></li>
+            <li><a href="/contact"><?= $translate['main_menu_contact'] ?></a></li>
         </ul>
     </nav>
     <!-- /MENU -->
@@ -41,3 +51,5 @@
 	<div class="left_side"><img src="/images/aside_long_img.png" alt="Логотип" width="90px"></div>
     <!-- Sets the block height to the size of the client area -->
     <script src="/js/left_block.js"></script>
+    <!-- -->
+    <script src="/js/change_language.js"></script>

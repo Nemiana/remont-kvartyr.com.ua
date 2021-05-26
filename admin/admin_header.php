@@ -1,9 +1,18 @@
-<?php session_start(); 
-//If not login user with access rights 'admin', exit to start page
-if (!isset($_SESSION['user']) || $_SESSION['rights'] != 'admin') {
-    header('Location: /admin/');
-    exit();
-}
+<?php
+    session_start(); 
+    //If not login user with access rights 'admin', exit to start page
+    if (!isset($_SESSION['user']) || $_SESSION['rights'] != 'admin') {
+        header('Location: /admin/');
+        exit();
+    }
+    //
+    if ($_COOKIE['admin_lang'] == 'rus') {
+        $translate = parse_ini_file ('/config/rus.php');
+    } else if ($_COOKIE['admin_lang'] == 'eng') {
+        $translate = parse_ini_file ('/config/eng.php');
+    } else {
+        $translate = parse_ini_file ('/config/ukr.php');
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -21,15 +30,24 @@ if (!isset($_SESSION['user']) || $_SESSION['rights'] != 'admin') {
     <script src="/admin/js/pop_up_action.js"></script>
 </head>
 <body>
+    <!-- HEADER -->
+	<header class="header">
+		<div class="admin_lang">
+            <input type="image" class="ukr<?php if ($_COOKIE['admin_lang'] == 'ukr' || !isset($_COOKIE['admin_lang'])) echo ' lang_active'; ?>" src="/images/ukr_flag.png" title="Українська" alt="Українська">
+            <input type="image" class="rus<?php if ($_COOKIE['admin_lang'] == 'rus') echo ' lang_active'; ?>" src="/images/rus_flag.png" title="Русский" alt="Русский">
+            <input type="image" class="eng<?php if ($_COOKIE['admin_lang'] == 'eng') echo ' lang_active'; ?>" src="/images/eng_flag.png" title="English" alt="English">
+		</div>
+	</header>	
+    <!-- /HEADER -->
     <!-- ADMIN MENU -->
     <nav>
         <ul>
-            <li><a href="/admin/admin_home_page.php">Головна</a></li>
-            <li><a href="/admin/admin_price_list.php">Прайс</a></li>
-			<li><a href="/admin/admin_gallery.php">Галерея</a></li>
-			<li><a href="/admin/admin_article.php">Статті</a></li>
-            <li><a href="/admin/admin_review.php">Відгуки</a></li>
-            <li><a href="/admin/admin_contact.php">Контакти</a></li>
+            <li><a href="/admin/admin_home_page.php"><?= $translate['main_menu_home'] ?></a></li>
+            <li><a href="/admin/admin_price_list.php"><?= $translate['main_menu_price'] ?></a></li>
+			<li><a href="/admin/admin_gallery.php"><?= $translate['main_menu_gallery'] ?></a></li>
+			<li><a href="/admin/admin_article.php"><?= $translate['main_menu_article'] ?></a></li>
+            <li><a href="/admin/admin_review.php"><?= $translate['main_menu_review'] ?></a></li>
+            <li><a href="/admin/admin_contact.php"><?= $translate['main_menu_contact'] ?></a></li>
         </ul>
     </nav>
     <!-- /ADMIN MENU -->
@@ -42,3 +60,5 @@ if (!isset($_SESSION['user']) || $_SESSION['rights'] != 'admin') {
     <div class="success_action">Дані збережено!</div>
     <div class="fail_action">Невдача!</div>
     <!-- / -->
+    <!-- -->
+    <script src="/js/change_language.js"></script>
