@@ -1,4 +1,7 @@
 <?php
+    require_once ('/query/queries.php');
+    //Query meta-tags for page
+    $result_meta_tags = get_meta_tags_query ('/article');
     require_once ('/view/view_header.php');
     require_once ('/view/pagination.php');
 ?>
@@ -6,11 +9,11 @@
     <!-- Selection amount articles per page -->
     <table>
         <tr>
-            <td><label for="amount_articles">Кількість статей на сторінці: </td>
+            <td><label for="amount_articles"><?= $translate['amount_articles_per_page'] ?></td>
             <td>
                 <select class="amount_articles" name="amount_articles">
                     <!-- Default value, allows you to select the first value 3 -->
-                    <option selected hidden>Вибрати</option>
+                    <option selected hidden><?= $translate['choose'] ?></option>
                     <!-- Checks cookie with the same name as class select to set 'selected' to option -->
                     <option value="3" <?php if ($_COOKIE['amount_articles'] == '3') echo 'selected'; ?>>3</option>
                     <option value="5" <?php if ($_COOKIE['amount_articles'] == '5') echo 'selected'; ?>>5</option>
@@ -48,7 +51,7 @@
                     echo "<p>{$date}</p>";
                     echo "<img src='/articles_images/{$item['image_article']}' alt='{$item['title_article']}'>";
                     echo "<p class='content'>{$short_content}";
-                    echo "<a href='/article/{$item['url']}'>Читати далі...</a></p>";
+                    echo "<a href='/article/{$item['url']}'>{$translate['read_more']}</a></p>";
                     echo "</div>";
                 }
             }

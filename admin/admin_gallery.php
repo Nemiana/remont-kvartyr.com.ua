@@ -9,7 +9,7 @@
         //If first button was pressed
         if (isset($_POST['meta_tags'])) {
             //Set meta-tags for gallery page (/gallery) from form fields
-            set_meta_tags_query ('/gallery', $_POST['meta_title'], $_POST['meta_keywords'], $_POST['meta_description']);
+            set_meta_tags_query ('/gallery', $_POST);
             reload();
         }
     };
@@ -17,23 +17,23 @@
     $result_meta_tags = get_meta_tags_query ('/gallery');   
 ?>
     <article class="admin_page">
-        <h1>Галерея</h1>
+        <h1><?= $translate['main_menu_gallery'] ?></h1>
         <!-- Form for change meta-tags -->
         <?php require_once ('/admin/admin_meta_form.php');?>
         <!-- Adding new gallery object (id = 0) -->
         <table class="add_record">
             <tr>
-                <td><a href='/admin/edit_gallery.php?id=0'>Додати новий об'єкт</a></td>
+                <td><a href='/admin/edit_gallery.php?id=0'><?= $translate['add_new_object'] ?></a></td>
             </tr>
         </table>
         <!-- Selection amount gallery objects per page -->
         <table>
             <tr>
-                <td><label for="amount_gallery_admin">Кількість об'єктів на сторінці: </td>
+                <td><label for="amount_gallery_admin"><?= $translate['amount_objects_per_page'] ?></td>
                 <td>
                     <select class="amount_gallery_admin" name="amount_gallery_admin">
                         <!-- Default value, allows you to select the first value 3 -->
-                        <option selected hidden>Вибрати</option>
+                        <option selected hidden><?= $translate['choose'] ?></option>
                         <!-- Checks cookie with the same name as class select to set 'selected' to option -->
                         <option value="3" <?php if ($_COOKIE['amount_gallery_admin'] == '3') echo 'selected'; ?>>3</option>
                         <option value="5" <?php if ($_COOKIE['amount_gallery_admin'] == '5') echo 'selected'; ?>>5</option>
@@ -77,13 +77,13 @@
                     <td>
                         <!-- Edit icon -->
                         <a href="/admin/edit_gallery.php?id=<?= $item['id'] ?>">
-                            <img src="/images/edit_icon.png" alt="edit" title="Редагувати">
+                            <img src="/images/edit_icon.png" alt="edit" title="<?= $translate['edit'] ?>">
                         </a>
                     </td>
                     <td>
                         <!-- Delete icon -->
                         <input type="image" src="/images/del_icon.png" class="delete_gallery" 
-                        data-id_gallery="<?= $item['id'] ?>" alt="delete" title="Видалити">
+                        data-id_gallery="<?= $item['id'] ?>" alt="delete" title="<?= $translate['delete'] ?>">
                     </td>
                 </tr>
                 <?php

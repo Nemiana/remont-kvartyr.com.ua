@@ -1,4 +1,7 @@
 <?php
+    require_once ('/query/queries.php');
+    //Query meta-tags for page
+    $result_meta_tags = get_meta_tags_query ('/review');
     require_once ('/view/view_header.php');
     require_once ('/view/pagination.php');
 ?>
@@ -7,11 +10,11 @@
     <div class="block_select">
         <table>
                 <tr>
-                    <td><label for="amount_reviews">Кількість відгуків на сторінці: </td>
+                    <td><label for="amount_reviews"><?= $translate['amount_reviews_per_page'] ?></td>
                     <td>
                         <select class="amount_reviews" name="amount_reviews">
                             <!-- Default value, allows you to select the first value 3 -->
-                            <option selected hidden>Вибрати</option>
+                            <option selected hidden><?= $translate['choose'] ?></option>
                             <!-- Checks cookie with the same name as class select to set 'selected' to option -->
                             <option value="3" <?php if ($_COOKIE['amount_reviews'] == '3') echo 'selected'; ?>>3</option>
                             <option value="5" <?php if ($_COOKIE['amount_reviews'] == '5') echo 'selected'; ?>>5</option>
@@ -37,7 +40,7 @@
         $reviews = set_pagination_parameteres($table_name, $elements_per_page, 0);
         //Collection may be empty
         if ($reviews) {
-            //For JS reveal and collapse long text
+            //Index for JS reveal and collapse long text
             $index = 0;
             //Output short reviews
             foreach ($reviews as $item) {
@@ -61,14 +64,14 @@
     <form class="feedback" method="POST" action="/feedback">
         <table>
             <tr>
-                <th colspan="3">Залиште свій відгук</th>
+                <th colspan="3"><?= $translate['leave_feedback'] ?></th>
             </tr>
             <tr>
-                <td><label for="name_user">Ім'я</label></td>
+                <td><label for="name_user"><?= $translate['name_user'] ?></label></td>
                 <td colspan="2"><input type="text" name="name_user" required></td>
             </tr>
             <tr>
-                <td><label for="text_review">Текст</label></td>
+                <td><label for="text_review"><?= $translate['text'] ?></label></td>
                 <td colspan="2"><textarea name="text_review" cols="70" rows="10" required></textarea></td>
             </tr>
             <tr>
@@ -94,7 +97,7 @@
                 </td>
             </tr>
             <tr>
-                <td colspan="3"><button type="submit">Відправити</button></td>
+                <td colspan="3"><button type="submit"><?= $translate['submit'] ?></button></td>
             </tr>
         </table>
     </form>

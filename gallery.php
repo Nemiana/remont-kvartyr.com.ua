@@ -1,4 +1,7 @@
 <?php
+    require_once ('/query/queries.php');
+    //Query meta-tags for page
+    $result_meta_tags = get_meta_tags_query ('/gallery');
     require_once ('/view/view_header.php');
     require_once ('/view/pagination.php');
     //Setting parameters pagination (table name and elements per page) and return collection for current page

@@ -1,4 +1,12 @@
 <?php
+    //Checks current language from cookies and upload appropriate file with translation
+    if ($_COOKIE['admin_lang'] == 'rus') {
+        $translate = parse_ini_file ('/config/rus.php');
+    } else if ($_COOKIE['admin_lang'] == 'eng') {
+        $translate = parse_ini_file ('/config/eng.php');
+    } else {
+        $translate = parse_ini_file ('/config/ukr.php');
+    }
     session_start();
     //User already login
     if (isset ($_SESSION['user']) && $_SESSION['rights'] == 'admin') {
@@ -18,7 +26,7 @@
                 exit();
             }
         } else {    //error if user data was incorrect
-            echo '<p style="color: red; text-align: center">Incorrect registration data!</p>';
+            echo "<p style='color: red; text-align: center'>{$translate['message_fail_login']}</p>";
             require_once ('/admin/admin_login.php');
         }
     } else { //else go in login page

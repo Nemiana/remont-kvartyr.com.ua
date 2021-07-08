@@ -5,7 +5,7 @@
         header('Location: /admin/');
         exit();
     }
-    //
+    //Checks current language from cookies and upload appropriate file with translation
     if ($_COOKIE['admin_lang'] == 'rus') {
         $translate = parse_ini_file ('/config/rus.php');
     } else if ($_COOKIE['admin_lang'] == 'eng') {
@@ -18,7 +18,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Ремонт квартир і будинків | Адмін-панель</title>
+    <title><?= $translate['admin_title'] ?></title>
     <link rel="stylesheet" href="/css/normalize.css">
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/admin/css/admin.css">
@@ -32,6 +32,7 @@
 <body>
     <!-- HEADER -->
 	<header class="header">
+        <!-- Language switch block for admin-panel (adds class style to active language (ukr by default)) -->
 		<div class="admin_lang">
             <input type="image" class="ukr<?php if ($_COOKIE['admin_lang'] == 'ukr' || !isset($_COOKIE['admin_lang'])) echo ' lang_active'; ?>" src="/images/ukr_flag.png" title="Українська" alt="Українська">
             <input type="image" class="rus<?php if ($_COOKIE['admin_lang'] == 'rus') echo ' lang_active'; ?>" src="/images/rus_flag.png" title="Русский" alt="Русский">
@@ -53,12 +54,12 @@
     <!-- /ADMIN MENU -->
     <!-- EXIT FROM ADMIN PANEL-->
     <form id="exit" method="POST" action="/admin/exit.php">
-        <button type="submit">Вийти з адмін-панелі</button>
+        <button type="submit"><?= $translate['admin_logout'] ?></button>
     </form>
     <!-- /EXIT -->
     <!-- Pop-up windows for success and fail action -->
-    <div class="success_action">Дані збережено!</div>
-    <div class="fail_action">Невдача!</div>
+    <div class="success_action"><?= $translate['success_action'] ?></div>
+    <div class="fail_action"><?= $translate['fail_action'] ?></div>
     <!-- / -->
-    <!-- -->
+    <!-- Script remember language in cookies and animate current choose -->
     <script src="/js/change_language.js"></script>

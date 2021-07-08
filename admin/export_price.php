@@ -1,7 +1,7 @@
 <?php
     require_once ('/query/queries.php');
-    //
-    if (session_status () == PHP_SESSION_NONE) {
+    //If session is not exists, creates it
+    if (session_status() == PHP_SESSION_NONE) {
         session_start();
     }
     //If not login user with access rights 'admin', exit to start page
@@ -15,11 +15,13 @@
     $delimiter = ';';
     //Name of the output file
     $file_name = 'export_price.csv';
-    //Extract short price-list
-    $result = get_price_list (FALSE);
+    //Extract price-list
+    $result = get_price_list ();
     //If price list not empty, encoding string from UTF-8 to Windows-1251 and write into .csv file in cycle
     if ($result) {
         foreach ($result as $value) {
+            //Delete first element of array - field id
+            array_shift ($value);
             fputcsv ($file_price, convert_UTF_1251 ($value), $delimiter);
         }
     };

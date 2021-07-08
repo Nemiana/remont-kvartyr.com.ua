@@ -19,24 +19,24 @@
                 ]);
     ?>
         <!-- Success message -->
-        <p style="text-align: center; font-weight: bold">Ваш відгук відправлено на модерацію. Повернутися до <a href="/review">списку відгуків</a>?</p>
+        <p style="text-align: center; font-weight: bold"><?= $translate['message_success_feedback'] ?></p>
     <?php
         } else {
     ?>
             <!-- If captcha was incorrect, shows warning message and form for adding review -->
-            <p style="color: red; text-align: center;">Неправильно заповнена капча! Спробуйте ще раз.</p>
+            <p style="color: red; text-align: center;"><?= $translate['message_fail_feedback'] ?></p>
             <!-- Form for feedback with remembering fields -->
             <form class="feedback" method="POST" action="/feedback">
                 <table>
                     <tr>
-                        <th colspan="3">Залиште свій відгук</th>
+                        <th colspan="3"><?= $translate['leave_feedback'] ?></th>
                     </tr>
                     <tr>
-                        <td><label for="name_user">Ім'я</label></td>
+                        <td><label for="name_user"><?= $translate['name_user'] ?></label></td>
                         <td colspan="2"><input type="text" name="name_user" value="<?= $_POST['name_user'] ?>" required></td>
                     </tr>
                     <tr>
-                        <td><label for="text_review">Текст</label></td>
+                        <td><label for="text_review"><?= $translate['text'] ?></label></td>
                         <td colspan="2"><textarea name="text_review" cols="70" rows="10" required><?= $_POST['text_review'] ?></textarea></td>
                     </tr>
                     <tr>
@@ -58,7 +58,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="3"><button type="submit">Відправити</button></td>
+                        <td colspan="3"><button type="submit"><?= $translate['submit'] ?></button></td>
                     </tr>
                 </table>
             </form>

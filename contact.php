@@ -6,7 +6,16 @@
     require_once ('/view/view_header.php');
 ?>
     <article class="contact">
-        <?= $result_contact[0]; ?>
+        <!-- Contacts with switch language -->
+        <?php 
+            if ($_COOKIE['lang'] == 'rus') {
+                echo $result_contact[2]; 
+            } else if ($_COOKIE['lang'] == 'eng') {
+                echo $result_contact[3]; 
+            } else {
+                echo $result_contact[1]; 
+            }
+        ?>
     </article>
 <?php
     require_once ('/view/view_footer.php');

@@ -15,24 +15,36 @@
         $sql = "CREATE TABLE IF NOT EXISTS meta (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 page_url VARCHAR(255),
-                meta_title VARCHAR(255),
-                meta_keywords VARCHAR(255),
-                meta_description VARCHAR(255)
+                meta_title_ukr VARCHAR(255),
+                meta_keywords_ukr VARCHAR(255),
+                meta_description_ukr VARCHAR(255),
+                meta_title_rus VARCHAR(255),
+                meta_keywords_rus VARCHAR(255),
+                meta_description_rus VARCHAR(255),
+                meta_title_eng VARCHAR(255),
+                meta_keywords_eng VARCHAR(255),
+                meta_description_eng VARCHAR(255)
             )";
         $result = mysqli_query ($link, $sql);
         if ($result == false) echo 'Table meta: ' . mysqli_error ($link);
         //Table for description of home page
         $sql = "CREATE TABLE IF NOT EXISTS home_page (
                     id INT AUTO_INCREMENT PRIMARY KEY,
-                    title VARCHAR(255),
-                    article TEXT
+                    title_ukr VARCHAR(255),
+                    article_ukr TEXT,
+                    title_rus VARCHAR(255),
+                    article_rus TEXT,
+                    title_eng VARCHAR(255),
+                    article_eng TEXT
                 )";
         $result = mysqli_query ($link, $sql);
         if ($result == false) echo 'Table home_page: ' . mysqli_error ($link);
         //Table for info of services and prices
         $sql = "CREATE TABLE IF NOT EXISTS price_page (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            `service` TEXT,
+            service_ukr TEXT,
+            service_rus TEXT,
+            service_eng TEXT,
             price FLOAT
         )";
         $result = mysqli_query ($link, $sql);
@@ -82,7 +94,9 @@
         //Table for contact info
         $sql = "CREATE TABLE IF NOT EXISTS contact_page (
             id INT AUTO_INCREMENT PRIMARY KEY,
-            info_contact TEXT
+            info_contact_ukr TEXT,
+            info_contact_rus TEXT,
+            info_contact_eng TEXT
         )";
         $result = mysqli_query ($link, $sql);
         if ($result == false) echo 'Table contact_page: ' . mysqli_error ($link);

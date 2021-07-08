@@ -1,6 +1,6 @@
-//When DOM loaded insert link
+//When DOM loaded insert link with image
 $(document).ready(function(){
-    $('body').append('<a href="#" id="go-top" title="Вгору">Вгору</a>');
+    $('body').append('<a href="#" id="go-top" title="Up"><img src="/images/go_top.png"></a>');
 });
 $(function() {
     $.fn.scrollToTop = function() {

@@ -8,12 +8,12 @@
         //If first button was pressed
         if (isset($_POST['meta_tags'])) {
             //Set meta-tags for root (/) from form fields
-            set_meta_tags_query ('/', $_POST['meta_title'], $_POST['meta_keywords'], $_POST['meta_description']);
+            set_meta_tags_query ('/', $_POST);
             reload ();
         //If second button was pressed
         } else if (isset($_POST['title_text'])) {
             //Set title and article for home page from form fields
-            set_main_article ($_POST['title_article'], $_POST['text_article']);
+            set_main_article ($_POST);
             reload ();
         };  
     };
@@ -23,21 +23,46 @@
     $result_article = get_main_article ();
 ?>
     <article class="admin_page">
-        <h1>Головна</h1>
+        <h1><?= $translate['main_menu_home'] ?></h1>
         <!-- Form for change meta-tags -->
-        <?php require_once ('/admin/admin_meta_form.php');?>
+        <?php require_once ('/admin/admin_meta_form.php'); ?>
         <form method="POST" action="<?= $_SERVER['PHP_SELF']; ?>">
             <table>
                 <tr>
-                    <td><label for="title_article">Заголовок: </label></td>
-                    <td><input type="text" name="title_article" size="100" value="<?= $result_article[0]; ?>"></td>
+                    <td colspan="2" class="contact_lang">Ukr</td>
                 </tr>
                 <tr>
-                    <td><label for="text_article">Текст: </label></td>
-                    <td><textarea name="text_article" cols="103" rows="10"><?= $result_article[1]; ?></textarea></td>
+                    <td><label for="title_article_ukr"><?= $translate['heading'] ?>: </label></td>
+                    <td><input type="text" name="title_article_ukr" size="100" value="<?= $result_article[1]; ?>"></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><button type="submit" name="title_text">Зберегти</button></td>
+                    <td><label for="text_article_ukr"><?= $translate['text'] ?>: </label></td>
+                    <td><textarea name="text_article_ukr" cols="103" rows="10"><?= $result_article[2]; ?></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="contact_lang">Rus</td>
+                </tr>
+                <tr>
+                    <td><label for="title_article_rus"><?= $translate['heading'] ?>: </label></td>
+                    <td><input type="text" name="title_article_rus" size="100" value="<?= $result_article[3]; ?>"></td>
+                </tr>
+                <tr>
+                    <td><label for="text_article_rus"><?= $translate['text'] ?>: </label></td>
+                    <td><textarea name="text_article_rus" cols="103" rows="10"><?= $result_article[4]; ?></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="contact_lang">Eng</td>
+                </tr>
+                <tr>
+                    <td><label for="title_article_eng"><?= $translate['heading'] ?>: </label></td>
+                    <td><input type="text" name="title_article_eng" size="100" value="<?= $result_article[5]; ?>"></td>
+                </tr>
+                <tr>
+                    <td><label for="text_article_eng"><?= $translate['text'] ?>: </label></td>
+                    <td><textarea name="text_article_eng" cols="103" rows="10"><?= $result_article[6]; ?></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button type="submit" name="title_text"><?= $translate['save'] ?></button></td>
                 </tr>
             </table>
         </form>

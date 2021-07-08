@@ -8,12 +8,12 @@
         //If first button was pressed
         if (isset($_POST['meta_tags'])) {
             //Set meta-tags for contact page (/contact) from form fields
-            set_meta_tags_query ('/contact', $_POST['meta_title'], $_POST['meta_keywords'], $_POST['meta_description']);
+            set_meta_tags_query ('/contact', $_POST);
             reload ();
         //If second button was pressed
         } else if (isset($_POST['contact'])) {
             //Set contact info for contact page from form fields
-            set_contact_info ($_POST['contact_text']);
+            set_contact_info ($_POST);
             reload ();
         }
     }
@@ -23,17 +23,34 @@
     $result_contact = get_contact_info ();
 ?>
     <article class="admin_page">
-        <h1>Контакти</h1>
+        <h1><?= $translate['main_menu_contact'] ?></h1>
         <!-- Form for change meta-tags -->
         <?php require_once ('/admin/admin_meta_form.php');?>
         <form method="POST" action="<?= $_SERVER['PHP_SELF']; ?>">
             <table>
                 <tr>
-                    <td><label for="contact_text">Контакти: </label></td>
-                    <td><textarea name="contact_text" cols="103" rows="10"><?= $result_contact[0]; ?></textarea></td>
+                    <td colspan="2" class="contact_lang">Ukr</td>
                 </tr>
                 <tr>
-                    <td colspan="2"><button type="submit" name="contact">Зберегти</button></td>
+                    <td><label for="contact_text_ukr"><?= $translate['main_menu_contact'] ?>: </label></td>
+                    <td><textarea name="contact_text_ukr" cols="103" rows="10"><?= $result_contact[1]; ?></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="contact_lang">Rus</td>
+                </tr>
+                <tr>
+                    <td><label for="contact_text_rus"><?= $translate['main_menu_contact'] ?>: </label></td>
+                    <td><textarea name="contact_text_rus" cols="103" rows="10"><?= $result_contact[2]; ?></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="contact_lang">Eng</td>
+                </tr>
+                <tr>
+                    <td><label for="contact_text_eng"><?= $translate['main_menu_contact'] ?>: </label></td>
+                    <td><textarea name="contact_text_eng" cols="103" rows="10"><?= $result_contact[3]; ?></textarea></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button type="submit" name="contact"><?= $translate['save'] ?></button></td>
                 </tr>
             </table>
         </form>

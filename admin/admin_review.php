@@ -9,7 +9,7 @@
         //If first button was pressed
         if (isset($_POST['meta_tags'])) {
             //Set meta-tags for review page (/review) from form fields
-            set_meta_tags_query ('/review', $_POST['meta_title'], $_POST['meta_keywords'], $_POST['meta_description']);
+            set_meta_tags_query ('/review', $_POST);
             reload();
         }
     };

@@ -13,7 +13,7 @@
     //If via POST was sent action 'save'
     if ($_POST['action'] == 'save') {
         //Calls function for update record and sets info message into session
-        if (save_price_list ($_POST['id'], $_POST['service'], $_POST['price'])) {
+        if (save_price_list ($_POST)) {
             $_SESSION['type_message'] = 'success';
             $_SESSION['text_message'] = 'Дані збережено';
         } else {
@@ -34,13 +34,18 @@
     } elseif ($_POST['action'] == 'save_all') {
         //Saves collections with id, service, price
         $id_collection = $_POST['id_array'];
-        $service_collection = $_POST['service_array'];
+        $service_ukr_collection = $_POST['service_ukr_array'];
+        $service_rus_collection = $_POST['service_rus_array'];
+        $service_eng_collection = $_POST['service_eng_array'];
         $price_collection = $_POST['price_array'];
         $flag_result = true;
         //Calls update function for every record in cycle
         for ($i = 0; $i < count ($id_collection); $i++) {
+            $array_data = [ 'id' => $id_collection[$i], 'service_ukr' => $service_ukr_collection[$i], 
+                'service_rus' => $service_rus_collection[$i], 'service_eng' => $service_eng_collection[$i],
+                'price' => $price_collection[$i] ];
             //If was fail update, changes success flag
-            if (!save_price_list ($id_collection[$i], $service_collection[$i], $price_collection[$i])) {
+            if (!save_price_list ($array_data)) {
                 $flag_result = false;
                 break;
             }

@@ -9,7 +9,7 @@
         //If first button was pressed
         if (isset($_POST['meta_tags'])) {
             //Set meta-tags for article page (/article) from form fields
-            set_meta_tags_query ('/article', $_POST['meta_title'], $_POST['meta_keywords'], $_POST['meta_description']);
+            set_meta_tags_query ('/article', $_POST);
             reload();
         }
     };
@@ -17,23 +17,23 @@
     $result_meta_tags = get_meta_tags_query ('/article');
 ?>
     <article class="admin_page">
-        <h1>Статті</h1>
+        <h1><?= $translate['main_menu_article'] ?></h1>
         <!-- Form for change meta-tags -->
         <?php require_once ('/admin/admin_meta_form.php');?>
         <!-- Adding new article (id = 0) -->
         <table class="add_record">
             <tr>
-                <td><a href='/admin/edit_article.php?id=0'>Додати нову статтю</a></td>
+                <td><a href='/admin/edit_article.php?id=0'><?= $translate['add_new_article'] ?></a></td>
             </tr>
         </table>
         <!-- Selection amount articles per page -->
         <table>
             <tr>
-                <td><label for="amount_articles_admin">Кількість статей на сторінці: </td>
+                <td><label for="amount_articles_admin"><?= $translate['amount_articles_per_page'] ?></td>
                 <td>
                     <select class="amount_articles_admin" name="amount_articles_admin">
                         <!-- Default value, allows you to select the first value 3 -->
-                        <option selected hidden>Вибрати</option>
+                        <option selected hidden><?= $translate['choose'] ?></option>
                         <!-- Checks cookie with the same name as class select to set 'selected' to option -->
                         <option value="3" <?php if ($_COOKIE['amount_articles_admin'] == '3') echo 'selected'; ?>>3</option>
                         <option value="5" <?php if ($_COOKIE['amount_articles_admin'] == '5') echo 'selected'; ?>>5</option>
@@ -47,7 +47,7 @@
         </table>
         <!-- Editable table of articles -->
         <div>
-            <table>
+            <table class="articles_table">
                 <?php
                     //Check cookie for chosen amount or default value 3
                     if (isset ($_COOKIE['amount_articles_admin'])) {
@@ -77,19 +77,19 @@
                             <p><?= $date ?></p>
                             <img src="/articles_images/<?= $item['image_article'] ?>" alt="<?= $item['title_article'] ?>">
                             <p class="content"><?= $short_content ?>
-                            <a href="/admin/edit_article.php?id=<?= $item['id'] ?>">Редагувати</a></p>
+                            <a href="/admin/edit_article.php?id=<?= $item['id'] ?>"><?= $translate['edit'] ?></a></p>
                         </div>
                     <td>
                     <td>
                         <!-- Edit icon -->
                         <a href="/admin/edit_article.php?id=<?= $item['id'] ?>">
-                            <img src="/images/edit_icon.png" alt="edit" title="Редагувати">
+                            <img src="/images/edit_icon.png" alt="edit" title="<?= $translate['edit'] ?>">
                         </a>
                     </td>
                     <td>
                         <!-- Delete icon -->
                         <input type="image" src="/images/del_icon.png" class="delete_article" 
-                        data-id_article="<?= $item['id'] ?>" alt="delete" title="Видалити">
+                        data-id_article="<?= $item['id'] ?>" alt="delete" title="<?= $translate['delete'] ?>">
                     </td>
                 </tr>
                 <?php

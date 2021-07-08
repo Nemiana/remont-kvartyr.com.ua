@@ -63,7 +63,7 @@
                     <td><input type="hidden" name="id_gallery_image[]" value="<?= $item['id']; ?>"></td>
                 </tr>
                 <tr>
-                    <td><label for="object_image">Фото: </label></td>
+                    <td><label for="object_image"><?= $translate['photo_image'] ?>: </label></td>
                     <!-- Input for chosen image file -->
                     <td><input type="file" name="object_image[]"></td>
                     <td><img src="/gallery_images/<?= $item['object_image']; ?>" class="object_image"></td>
@@ -72,7 +72,7 @@
                         class="delete_image" alt="delete" title="Видалити"></td>
                 </tr>
                 <tr>
-                    <td><label for="image_description">Опис: </label></td>
+                    <td><label for="image_description"><?= $translate['description'] ?>: </label></td>
                     <td colspan="2"><input type="text" name="image_description[]" size="95" value="<?= $item['image_description']; ?>"></td>
                 </tr>
             </table>

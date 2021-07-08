@@ -8,6 +8,7 @@ function show_info_message () {
 }
 //Check login, password and return access rights
 function check_authentication ($name, $pass) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Query username, password and access rights by entered name
@@ -32,21 +33,22 @@ function check_authentication ($name, $pass) {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     } 
 }
 //Get meta-tags for web-page
 function get_meta_tags_query ($url) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Execute the request of meta-tags from DB
-        if ($result = mysqli_query($link, "SELECT meta_title, meta_keywords, meta_description FROM meta WHERE page_url = '$url'")) {
+        if ($result = mysqli_query($link, "SELECT * FROM meta WHERE page_url = '$url'")) {
             //Remember meta-tags
             $result_meta_tags = mysqli_fetch_row ($result);
             mysqli_free_result ($result);
         } else {
             //Default
-            $result_meta_tags = ['', '', ''];
+            $result_meta_tags = [];
         }
         mysqli_close ($link);
         //Return meta-tags
@@ -54,100 +56,118 @@ function get_meta_tags_query ($url) {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Set meta-tags for web-page
-function set_meta_tags_query ($url, $title, $keywords, $description) {
+function set_meta_tags_query ($url, $array_data) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //The query checks if a URL exists in the database
-        $result = mysqli_query ($link, "SELECT 1 FROM meta WHERE page_url = '$url'");
+        $result = mysqli_query ($link, "SELECT * FROM meta WHERE page_url = '$url'");
         //If exists, then update record, else insert new record
-        if (mysqli_fetch_row ($result)) {
-            $sql = "UPDATE meta SET meta_title = ?, meta_keywords = ?, meta_description = ? WHERE page_url = '$url'";
+        if ($row = mysqli_fetch_row ($result)) {
+            $sql = "UPDATE meta SET meta_title_ukr = ?, meta_keywords_ukr = ?, meta_description_ukr = ?,
+                meta_title_rus = ?, meta_keywords_rus = ?, meta_description_rus = ?,
+                meta_title_eng = ?, meta_keywords_eng = ?, meta_description_eng = ? WHERE id = '$row[0]'";
         } else {
-            $sql = "INSERT INTO meta (page_url, meta_title, meta_keywords, meta_description) VALUES ('$url', ?, ?, ?)";
+            $sql = "INSERT INTO meta (page_url, meta_title_ukr, meta_keywords_ukr, meta_description_ukr,
+                meta_title_rus, meta_keywords_rus, meta_description_rus,
+                meta_title_eng, meta_keywords_eng, meta_description_eng) VALUES ('$url', ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         }
         mysqli_free_result ($result);
         //Prepare a statement and bind parameters
         $stmt = mysqli_prepare ($link, $sql);
-        mysqli_stmt_bind_param ($stmt, 'sss', $title, $keywords, $description);
+        mysqli_stmt_bind_param ($stmt, 'sssssssss', 
+            $array_data['meta_title_ukr'], $array_data['meta_keywords_ukr'], $array_data['meta_description_ukr'],
+            $array_data['meta_title_rus'], $array_data['meta_keywords_rus'], $array_data['meta_description_rus'],
+            $array_data['meta_title_eng'], $array_data['meta_keywords_eng'], $array_data['meta_description_eng']);
         //If execute statement success
         if (mysqli_stmt_execute ($stmt)) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Мета-теги збережено';
+            $_SESSION['text_message'] = $translate['message_success_meta_tags'];
         } else { 
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося зберегти мета-теги';
+            $_SESSION['text_message'] = $translate['message_fail_meta_tags'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
+//Gets title and article in three languages for home page
 function get_main_article () {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Execute the request of title and article from DB
-        if ($result = mysqli_query ($link, "SELECT title, article FROM home_page")) {
+        if ($result = mysqli_query ($link, "SELECT * FROM home_page")) {
             //Save data
             $result_article = mysqli_fetch_row ($result);
             mysqli_free_result ($result);
         } else {
             //Default
-            $result_article = ['', ''];
+            $result_article = [];
         }
         mysqli_close ($link);
         return $result_article;    
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
-function set_main_article ($title, $text) {
+//Sets title and article in three languages for home page
+function set_main_article ($array_data) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
-        //The query checks if the first record exists in the database
-        $result = mysqli_query ($link, "SELECT 1 FROM home_page WHERE id = 1");
+        //The query checks if the at least one record exists in the database
+        $result = mysqli_query ($link, "SELECT * FROM home_page");
         //If exists, then update record, else insert new record
-        if (mysqli_fetch_row ($result)) {
-            $sql = "UPDATE home_page SET title = ?, article = ? WHERE id = 1";
+        if ($row = mysqli_fetch_row ($result)) {
+            $sql = "UPDATE home_page SET title_ukr = ?, article_ukr = ?, title_rus = ?, article_rus = ?, 
+                    title_eng = ?, article_eng = ? WHERE id = '$row[0]'";
         } else {
-            $sql = "INSERT INTO home_page VALUES (1, ?, ?)";
+            $sql = "INSERT INTO home_page (title_ukr, article_ukr, title_rus, article_rus, 
+                    title_eng, article_eng) VALUES (?, ?, ?, ?, ?, ?)";
         }
         mysqli_free_result ($result);
         //Prepare a statement and bind parameters
         $stmt = mysqli_prepare ($link, $sql);
-        mysqli_stmt_bind_param ($stmt, 'ss', $title, $text);
+        mysqli_stmt_bind_param ($stmt, 'ssssss', $array_data['title_article_ukr'], $array_data['text_article_ukr'], 
+            $array_data['title_article_rus'], $array_data['text_article_rus'],
+            $array_data['title_article_eng'], $array_data['text_article_eng']);
         //If execute statement success
         if (mysqli_stmt_execute ($stmt)) { 
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Заголовок і стаття збережені';
+            $_SESSION['text_message'] = $translate['message_success_main_article'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося зберегти заголовок і статтю';
+            $_SESSION['text_message'] = $translate['message_fail_main_article'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
+//Gets contact info in three languages for contact page
 function get_contact_info () {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Execute the request of contact info from DB
-        if ($result = mysqli_query ($link, "SELECT info_contact FROM contact_page")) {
+        if ($result = mysqli_query ($link, "SELECT * FROM contact_page")) {
             //Save data
             $result_contact = mysqli_fetch_row ($result);
             mysqli_free_result ($result);
@@ -160,40 +180,42 @@ function get_contact_info () {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
-function set_contact_info ($text) {
+//Sets contact info in three languages for contact page
+function set_contact_info ($array_data) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
-        //The query checks if the first record exists in the database
-        $result = mysqli_query ($link, "SELECT 1 FROM contact_page WHERE id = 1");
+        //The query checks if the at least one record exists in the database
+        $result = mysqli_query ($link, "SELECT * FROM contact_page");
         //If exists, then update record, else insert new record
-        if (mysqli_fetch_row ($result)) {
-            $sql = "UPDATE contact_page SET info_contact = ? WHERE id = 1";
+        if ($row = mysqli_fetch_row ($result)) {
+            $sql = "UPDATE contact_page SET info_contact_ukr = ?, info_contact_rus = ?, info_contact_eng = ? WHERE id = '$row[0]'";
         } else {
-            $sql = "INSERT INTO contact_page VALUES (1, ?)";
+            $sql = "INSERT INTO contact_page (info_contact_ukr, info_contact_rus, info_contact_eng) VALUES (?, ?, ?)";
         }
         mysqli_free_result ($result);
         //Prepare a statement and bind parameters
         $stmt = mysqli_prepare ($link, $sql);
-        mysqli_stmt_bind_param ($stmt, 's', $text);
+        mysqli_stmt_bind_param ($stmt, 'sss', $array_data['contact_text_ukr'], $array_data['contact_text_rus'], $array_data['contact_text_eng']);
         //If execute statement success
         if (mysqli_stmt_execute ($stmt)) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Контакти збережені';
+            $_SESSION['text_message'] = $translate['message_success_contact'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося зберегти контакти';
+            $_SESSION['text_message'] = $translate['message_fail_contact'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Convert every string in array from Windows-1251 to UTF-8 encoding
@@ -220,6 +242,7 @@ function reload ($path = '') {
 }
 //Import prices and services from .csv file into DB table
 function import_file_price ($price) {
+    global $translate;
     //If file selected and can be opened for reading
     if ($_FILES[$price]['name'] && $handle = fopen ($_FILES[$price]['tmp_name'], 'rt')) {
         //Connect to DB
@@ -229,7 +252,7 @@ function import_file_price ($price) {
                 //If encoding success
                 if ($convert_string = convert_1251_UTF ($input_string)) {
                     //Request for existence record with the same service
-                    $sql = "SELECT 1 FROM price_page WHERE `service` = ?";
+                    $sql = "SELECT 1 FROM price_page WHERE service_ukr = ?";
                     $stmt = mysqli_prepare ($link, $sql);
                     //Bind parameter from the first element of array
                     mysqli_stmt_bind_param ($stmt, 's', $convert_string[0]);
@@ -241,14 +264,14 @@ function import_file_price ($price) {
                     unset ($stmt, $sql);
                     //If record exists, update record by serice field
                     if ($flag_result) {
-                        $sql = "UPDATE price_page SET price = ? WHERE `service` = ?";
+                        $sql = "UPDATE price_page SET service_rus = ?, service_eng = ?, price = ? WHERE service_ukr = ?";
                     //else insert new record
                     } else {
-                        $sql = "INSERT INTO price_page (price, `service`) VALUES (?, ?)";
+                        $sql = "INSERT INTO price_page (service_rus, service_eng, price, service_ukr) VALUES (?, ?, ?, ?)";
                     }
                     $stmt = mysqli_prepare ($link, $sql);
                     //Bind parameters for both variants
-                    mysqli_stmt_bind_param ($stmt, 'ds', $convert_string[1], $convert_string[0]);
+                    mysqli_stmt_bind_param ($stmt, 'ssds', $convert_string[1], $convert_string[2], $convert_string[3], $convert_string[0]);
                     //If execute statement success, flag = true, continue
                     if (mysqli_stmt_execute ($stmt)) { 
                         $flag_result = true;
@@ -261,34 +284,35 @@ function import_file_price ($price) {
                 } else {
                     //Sets info message into session
                     $_SESSION['type_message'] = 'fail';
-                    $_SESSION['text_message'] = 'Не вдалося конвертувати рядок файлу';
+                    $_SESSION['text_message'] = $translate['message_fail_convert'];
                 }
             }
             if ($flag_result) {
                 //Sets info message into session
                 $_SESSION['type_message'] = 'success';
-                $_SESSION['text_message'] = 'Прайс-лист оновлено';
+                $_SESSION['text_message'] = $translate['message_success_price_list'];
             } else {
                 //Sets info message into session
                 $_SESSION['type_message'] = 'fail';
-                $_SESSION['text_message'] = 'Не вдалося оновити прайс-лист';
+                $_SESSION['text_message'] = $translate['message_fail_price_list'];
             }
             mysqli_close($link);
             fclose ($handle);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+            $_SESSION['text_message'] = $translate['message_fail_db'];
         }
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося завантажити файл';
+        $_SESSION['text_message'] = $translate['message_fail_upload'];
     }
 }
 //Returns array of records with id, service and price from table DB or empty array
 //Argument - flag for full (with ID) or short records
-function get_price_list ($full) {
+function get_price_list () {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Request to DB to extract all records with services and prices
@@ -296,33 +320,29 @@ function get_price_list ($full) {
         //Extracts rows in cycle
         while ($result_line = mysqli_fetch_row ($result)) {
             //Remember all string in array
-            if ($full) {
-                $price_list[] = $result_line;
-            //Or only service and price
-            } else {
-                $price_list[] = [$result_line[1], $result_line[2]];
-            }
+            $price_list[] = $result_line;
         }
         mysqli_free_result ($result);
         return $price_list;
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
         return [];
     }
 }
 //Function for update record in DB, returns true if success and false if fail
-function save_price_list ($id, $service, $price) {
+function save_price_list ($array_data) {
     //If service and price not empty srtings
-    if ($service != '' && $price != '') {
+    if ($array_data['service_ukr'] != '' && $array_data['price'] != '') {
         //Connect to DB
         if ($link = require ('/query/connect.php')) {
             //Query for update service and price by the specified id
-            $sql = "UPDATE price_page SET `service` = ?, price = ? WHERE id = ?";
+            $sql = "UPDATE price_page SET service_ukr = ?, service_rus = ?, service_eng = ?, price = ? WHERE id = ?";
             //Prepare and bind parameters
             $stmt = mysqli_prepare ($link, $sql);
-            mysqli_stmt_bind_param ($stmt, 'sdd', $service, $price, $id);
+            mysqli_stmt_bind_param ($stmt, 'sssdd', $array_data['service_ukr'], $array_data['service_rus'], 
+            $array_data['service_eng'], $array_data['price'], $array_data['id']);
             //Returns result of executing
             if (mysqli_stmt_execute ($stmt)) {
                 return true;
@@ -360,14 +380,15 @@ function delete_price_list ($id) {
     }
 }
 //Function for adding new record to DB or update if servise already exists
-function add_service_price ($new_service, $new_price) {
+function add_service_price ($array_data) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Query for searching record with the same service
-        $sql = "SELECT 1 FROM price_page WHERE `service` = ?";
+        $sql = "SELECT 1 FROM price_page WHERE service_ukr = ?";
         //Prepare and bind parameter
         $stmt = mysqli_prepare ($link, $sql);
-        mysqli_stmt_bind_param ($stmt, 's', $new_service);
+        mysqli_stmt_bind_param ($stmt, 's', $array_data['new_service_ukr']);
         //Execute, bind and fetch result in flag
         mysqli_stmt_execute ($stmt);
         mysqli_stmt_bind_result ($stmt, $flag_result);
@@ -376,29 +397,30 @@ function add_service_price ($new_service, $new_price) {
         unset ($stmt, $sql);
         //If record exists, updates it
         if ($flag_result) {
-            $sql = "UPDATE price_page SET price = ? WHERE `service` = ?";
+            $sql = "UPDATE price_page SET service_rus = ?, service_eng = ?, price = ? WHERE service_ukr = ?";
         //else inserts new record
         } else {
-            $sql = "INSERT INTO price_page (price, `service`) VALUES (?, ?)";
+            $sql = "INSERT INTO price_page (service_rus, service_eng, price, service_ukr) VALUES (?, ?, ?, ?)";
         }
         //Prepare and bind parameters
         $stmt = mysqli_prepare ($link, $sql);
-        mysqli_stmt_bind_param ($stmt, 'ds', $new_price, $new_service);
+        mysqli_stmt_bind_param ($stmt, 'ssds', $array_data['new_service_rus'], $array_data['new_service_eng'],
+        $array_data['new_price'], $array_data['new_service_ukr']);
         if (mysqli_stmt_execute ($stmt)) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Послугу додано';
+            $_SESSION['text_message'] = $translate['message_success_price_service'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося додати послугу';
+            $_SESSION['text_message'] = $translate['message_fail_price_service'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }  
 }
 //Converting strings to SEF URL
@@ -418,6 +440,7 @@ function transliteration ($string_url) {
 }
 //Get article by id from DB
 function get_article ($id_article) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Fields names from table for associative array
@@ -446,11 +469,12 @@ function get_article ($id_article) {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Get article by URL from DB
 function get_article_by_url ($url) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Fields names from table for associative array
@@ -472,11 +496,12 @@ function get_article_by_url ($url) {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Addition new article to table of DB
 function add_article ($array_data) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //If date not filled, use current date
@@ -513,22 +538,23 @@ function add_article ($array_data) {
         if (mysqli_stmt_execute ($stmt)) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Статтю додано';
+            $_SESSION['text_message'] = $translate['message_success_add_article'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося додати статтю';
+            $_SESSION['text_message'] = $translate['message_fail_add_article'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Save modified article to DB
 function save_article ($array_data) {
+    global $translate;
     $id_article = $array_data['id_article'];
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
@@ -557,61 +583,63 @@ function save_article ($array_data) {
         if (mysqli_stmt_execute ($stmt)) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Статтю збережено';
+            $_SESSION['text_message'] = $translate['message_success_save_article'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося зберегти статтю';
+            $_SESSION['text_message'] = $translate['message_fail_save_article'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);    
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }   
 }
 //Delete artice by id
 function delete_article ($id_article) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Delete article from DB by id
         if ($result = mysqli_query ($link, "DELETE FROM article_page WHERE id = '$id_article'")) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Статтю видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete_article'];
             mysqli_free_result ($result);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити статтю';
+            $_SESSION['text_message'] = $translate['message_fail_delete_article'];
         }
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Delete image from article by id article
 function delete_image_article ($id_article) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Clear field with image in record
         if ($result = mysqli_query ($link, "UPDATE article_page SET image_article = '' WHERE id = '$id_article'")) {
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Зображення видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete_image'];
             mysqli_free_result ($result);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити зображення';
+            $_SESSION['text_message'] = $translate['message_fail_delete_image'];
         }
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Counts records in table by its name (for pagination)
@@ -705,6 +733,7 @@ function get_review_records ($table_name, $start, $amount, $visible) {
 }
 //Get review by id from DB
 function get_review ($id_review) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Fields names from table for associative array
@@ -732,11 +761,12 @@ function get_review ($id_review) {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Addition new review to table of DB
 function add_review ($array_data) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //If date not filled, use current date
@@ -751,22 +781,23 @@ function add_review ($array_data) {
         if (mysqli_stmt_execute ($stmt)) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Відгук додано';
+            $_SESSION['text_message'] = $translate['message_success_add_review'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося додати відгук';
+            $_SESSION['text_message'] = $translate['message_fail_add_review'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Save modified review to DB
 function save_review ($array_data) {
+    global $translate;
     $id_review = $array_data['id_review'];
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
@@ -782,40 +813,41 @@ function save_review ($array_data) {
         if (mysqli_stmt_execute ($stmt)) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Відгук збережено';
+            $_SESSION['text_message'] = $translate['message_success_save_review'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося зберегти відгук';
+            $_SESSION['text_message'] = $translate['message_fail_save_review'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);    
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }   
 }
 //Delete review by id
 function delete_review ($id_review) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Delete review from DB by id
         if ($result = mysqli_query ($link, "DELETE FROM review_page WHERE id = '$id_review'")) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Відгук видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete_review'];
             mysqli_free_result ($result);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити відгук';
+            $_SESSION['text_message'] = $translate['message_fail_delete_review'];
         }
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Get range of gallery records (for pagination)
@@ -846,28 +878,30 @@ function get_gallery_records ($table_name, $start, $amount) {
 }
 //Delete gallery object by id
 function delete_gallery ($id_gallery) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Delete gallery object from DB by id
         if ($result = mysqli_query ($link, "DELETE FROM gallery_page WHERE id = '$id_gallery'")) {
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Об\'єкт галереї видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete_gallery'];
             mysqli_free_result ($result);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити об\'єкт галереї';
+            $_SESSION['text_message'] = $translate['message_fail_delete_gallery'];
         }
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Get gallery object by id from DB
 function get_gallery ($id_gallery) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Fields names from table for associative array
@@ -895,11 +929,12 @@ function get_gallery ($id_gallery) {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Get images array of gallery object by object id
 function get_gallery_images ($id_gallery) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Fields names from table for associative array
@@ -927,11 +962,12 @@ function get_gallery_images ($id_gallery) {
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Addition new gallery object to table of DB
 function add_gallery ($array_data) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Insert new gallery object
@@ -968,22 +1004,23 @@ function add_gallery ($array_data) {
             }   
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Об\'єкт галереї додано';
+            $_SESSION['text_message'] = $translate['message_success_add_gallery'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося додати об\'єкт галереї';
+            $_SESSION['text_message'] = $translate['message_fail_add_gallery'];
         }
         mysqli_stmt_close($stmt);
         mysqli_close ($link);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+            $_SESSION['text_message'] = $translate['message_fail_db'];
         }
 }
 //Save modified gallery object to DB
 function save_gallery ($array_data) {
+    global $translate;
     $id_gallery = $array_data['id_gallery_object'];
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
@@ -1036,59 +1073,61 @@ function save_gallery ($array_data) {
             }
             //Sets info message into session
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Об\'єкт галереї додано';
+            $_SESSION['text_message'] = $translate['message_success_save_gallery'];
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося додати об\'єкт галереї';
+            $_SESSION['text_message'] = $translate['message_fail_save_gallery'];
         }
         //mysqli_stmt_close($stmt);
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Delete start image from gallery object by id
 function delete_gallery_start_image ($id_gallery) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Clear field with image in record
         if ($result = mysqli_query ($link, "UPDATE gallery_page SET object_start_image = '' WHERE id = '$id_gallery'")) {
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Зображення видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete_image'];
             mysqli_free_result ($result);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити зображення';
+            $_SESSION['text_message'] = $translate['message_fail_delete_image'];
         }
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
 //Delete image from gallery object by image id
 function delete_gallery_image ($id_image) {
+    global $translate;
     //Connect to DB
     if ($link = require ('/query/connect.php')) {
         //Delete image record by image id
         if ($result = mysqli_query ($link, "DELETE FROM gallery_objects WHERE id = '$id_image'")) {
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Фото видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete_image'];
             mysqli_free_result ($result);
         } else {
             //Sets info message into session
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити фото';
+            $_SESSION['text_message'] = $translate['message_fail_delete_image'];
         }
         mysqli_close ($link);
     } else {
         //Sets info message into session
         $_SESSION['type_message'] = 'fail';
-        $_SESSION['text_message'] = 'Не вдалося підключитися до бази даних';
+        $_SESSION['text_message'] = $translate['message_fail_db'];
     }
 }
