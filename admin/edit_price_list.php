@@ -1,7 +1,7 @@
 <?php
     //Page for processing all actions, sends by ajax
     require_once ('/query/queries.php');
-    //
+    //If session not started, starts it
     if (session_status () == PHP_SESSION_NONE) {
         session_start();
     }
@@ -10,25 +10,33 @@
         header('Location: /admin/');
         exit();
     };
+    //Checks current language from cookies and upload appropriate file with translation
+    if ($_COOKIE['admin_lang'] == 'rus') {
+        $translate = parse_ini_file ('/config/rus.php');
+    } else if ($_COOKIE['admin_lang'] == 'eng') {
+        $translate = parse_ini_file ('/config/eng.php');
+    } else {
+        $translate = parse_ini_file ('/config/ukr.php');
+    }
     //If via POST was sent action 'save'
     if ($_POST['action'] == 'save') {
         //Calls function for update record and sets info message into session
         if (save_price_list ($_POST)) {
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Дані збережено';
+            $_SESSION['text_message'] = $translate['success_action'];
         } else {
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося зберегти дані';
+            $_SESSION['text_message'] = $translate['message_fail_save'];
         };
     //If via POST was sent action 'delete'
     } elseif ($_POST['action'] == 'delete') {
         //Calls function for delete record and sets info message into session
         if (delete_price_list ($_POST['id'])) {
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Дані видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete'];
         } else {
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити дані';
+            $_SESSION['text_message'] = $translate['message_fail_delete'];
         };
     //If via POST was sent action 'save all'
     } elseif ($_POST['action'] == 'save_all') {
@@ -53,10 +61,10 @@
         //Sets info message into session
         if ($flag_result) {
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Дані збережено';
+            $_SESSION['text_message'] = $translate['success_action'];
         } else {
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося зберегти дані';
+            $_SESSION['text_message'] = $translate['message_fail_save'];
         };
     //If via POST was sent action 'delete all'
     } elseif ($_POST['action'] == 'delete_all') {
@@ -74,9 +82,9 @@
         //Sets info message into session
         if ($flag_result) {
             $_SESSION['type_message'] = 'success';
-            $_SESSION['text_message'] = 'Дані видалено';
+            $_SESSION['text_message'] = $translate['message_success_delete'];
         } else {
             $_SESSION['type_message'] = 'fail';
-            $_SESSION['text_message'] = 'Не вдалося видалити дані';
+            $_SESSION['text_message'] = $translate['message_fail_delete'];
         };
     };

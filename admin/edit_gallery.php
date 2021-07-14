@@ -11,7 +11,7 @@
     //Get all images of object gallery
     $gallery_images = get_gallery_images ($id_gallery);
     //If id = 0 - addition gallery object, else edit and save gallery object (title page and name submit button)
-    $title_page = $id_gallery > 0 ? 'Редагування об\'єкта галереї' : 'Додавання об\'єкта галереї';
+    $title_page = $id_gallery > 0 ? $translate['edit_object_gallery'] : $translate['add_object_gallery'];
     $submit_name = $id_gallery > 0 ? 'save_gallery' : 'add_gallery';
     //Current path to reload page
     $path = '/admin/admin_gallery.php';
@@ -38,7 +38,7 @@
                     <td><input type="hidden" name="id_gallery_object" value="<?= $gallery_object['id']; ?>"></td>
                 </tr>
                 <tr>
-                    <td><label for="object_start_image">Стартове зображення: </label></td>
+                    <td><label for="object_start_image"><?= $translate['start_image'] ?></label></td>
                     <!-- Input for chosen image file -->
                     <td><input type="file" name="object_start_image"></td>
                     <td><img src="/gallery_images/<?= $gallery_object['object_start_image']; ?>" class="object_start_image"></td>
@@ -47,7 +47,7 @@
                         class="delete_start_image" alt="delete" title="Видалити"></td>
                 </tr>
                 <tr>
-                    <td><label for="object_name">Назва об'єкта: </label></td>
+                    <td><label for="object_name"><?= $translate['name_object'] ?></label></td>
                     <td colspan="3"><input type="text" name="object_name" size="80" value="<?= $gallery_object['object_name']; ?>"></td>
                 </tr>
             </table>
@@ -69,7 +69,7 @@
                     <td><img src="/gallery_images/<?= $item['object_image']; ?>" class="object_image"></td>
                     <!-- Delete icon for image -->
                     <td rowspan="2"><input type="image" src="/images/del_all_icon.png" data-id_image="<?= $item['id']; ?>"
-                        class="delete_image" alt="delete" title="Видалити"></td>
+                        class="delete_image" alt="delete" title="<?= $translate['delete'] ?>"></td>
                 </tr>
                 <tr>
                     <td><label for="image_description"><?= $translate['description'] ?>: </label></td>
@@ -84,8 +84,8 @@
             <!-- Block with buttons for adding new image and save all changes -->
             <table class="edit_gallery">
                 <tr>
-                    <td><button type="button" class="add_image">Додати фото</button></td>
-                    <td><button type="submit" name="<?= $submit_name; ?>">Зберегти</button></td>
+                    <td><button type="button" class="add_image"><?= $translate['add_photo'] ?></button></td>
+                    <td><button type="submit" name="<?= $submit_name; ?>"><?= $translate['save'] ?></button></td>
                 </tr>
             </table>
         </form>

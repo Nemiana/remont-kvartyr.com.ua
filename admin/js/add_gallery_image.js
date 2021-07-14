@@ -8,13 +8,13 @@ addButton.addEventListener('click', function () {
                         <td><input type="hidden" name="id_gallery_image[]" value="0"></td>
                     </tr>
                     <tr>
-                        <td><label for="object_image"><?= $translate['photo_image'] ?>: </label></td>
+                        <td><label for="object_image">Photo: </label></td>
                         <!-- Input for chosen image file -->
                         <td><input type="file" name="object_image[]"></td>
                         <td><img src="" class="object_image"></td>
                     </tr>
                     <tr>
-                        <td><label for="image_description"><?= $translate['description'] ?>: </label></td>
+                        <td><label for="image_description">Description: </label></td>
                         <td colspan="2"><input type="text" name="image_description[]" size="80" value=""></td>
                     </tr>
                 </table>`;

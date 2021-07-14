@@ -17,23 +17,23 @@
     $result_meta_tags = get_meta_tags_query ('/review');    
 ?>
     <article class="admin_page">
-        <h1>Відгуки</h1>
+        <h1><?= $translate['main_menu_review'] ?></h1>
         <!-- Form for change meta-tags -->
         <?php require_once ('/admin/admin_meta_form.php');?>
         <!-- Adding new review (id = 0) -->
         <table class="add_record">
             <tr>
-                <td><a href='/admin/edit_review.php?id=0'>Додати новий відгук</a></td>
+                <td><a href='/admin/edit_review.php?id=0'><?= $translate['add_new_review'] ?></a></td>
             </tr>
         </table>
         <!-- Selection amount reviews per page -->
         <table>
             <tr>
-                <td><label for="amount_reviews_admin">Кількість відгуків на сторінці: </td>
+                <td><label for="amount_reviews_admin"><?= $translate['amount_reviews_per_page'] ?></td>
                 <td>
                     <select class="amount_reviews_admin" name="amount_reviews_admin">
                         <!-- Default value, allows you to select the first value 3 -->
-                        <option selected hidden>Вибрати</option>
+                        <option selected hidden><?= $translate['choose'] ?></option>
                         <!-- Checks cookie with the same name as class select to set 'selected' to option -->
                         <option value="3" <?php if ($_COOKIE['amount_reviews_admin'] == '3') echo 'selected'; ?>>3</option>
                         <option value="5" <?php if ($_COOKIE['amount_reviews_admin'] == '5') echo 'selected'; ?>>5</option>
@@ -50,12 +50,12 @@
             <table>
                 <!-- Table header -->
                 <tr>
-                    <th>Текст відгука</th>
-                    <th>Ім'я користувача</th>
-                    <th>Дата створення відгука</th>
-                    <th>Показувати</th>
-                    <th>Редагувати</th>
-                    <th>Видалити</th>
+                    <th><?= $translate['text_review'] ?></th>
+                    <th><?= $translate['name_user'] ?></th>
+                    <th><?= $translate['date_creation_review'] ?></th>
+                    <th><?= $translate['show'] ?></th>
+                    <th><?= $translate['edit'] ?></th>
+                    <th><?= $translate['delete'] ?></th>
                 </tr>
                 <?php
                     //Check cookie for chosen amount or default value 3
@@ -84,17 +84,17 @@
                     <td class='review_text' data-index=<?= $index ?>><?= $item['text_review'] ?></td>
                     <td><?= $item['name_user'] ?></td>
                     <td class='review_date'><?= $date ?></td>
-                    <td><?= ($item['check_publication']) ? 'Так' : 'Ні' ?></td>
+                    <td><?= ($item['check_publication']) ? "{$translate['answer_yes']}" : "{$translate['answer_no']}" ?></td>
                     <td>
                         <!-- Edit icon -->
                         <a href="/admin/edit_review.php?id=<?= $item['id'] ?>">
-                            <img src="/images/edit_icon.png" alt="edit" title="Редагувати">
+                            <img src="/images/edit_icon.png" alt="edit" title="<?= $translate['edit'] ?>">
                         </a>
                     </td>
                     <td>
                         <!-- Delete icon -->
                         <input type="image" src="/images/del_icon.png" class="delete_review" 
-                        data-id_review="<?= $item['id'] ?>" alt="delete" title="Видалити">
+                        data-id_review="<?= $item['id'] ?>" alt="delete" title="<?= $translate['delete'] ?>">
                     </td>
                 </tr>
                 <?php
