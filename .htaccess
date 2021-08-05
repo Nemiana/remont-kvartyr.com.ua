@@ -1,20 +1,13 @@
 AddDefaultCharset UTF-8
+
 #Error page
 ErrorDocument 404 /view/error_404.php
+
 #Include path for PHP
 php_value include_path "D:\Nemi documents\Programming\OpenServer\domains\remont-kvartyr.com.ua"
+
 Options +FollowSymLinks
 RewriteEngine On
-
-####
-#Redirect from www ?
-#
-#RewriteCond %{HTTP_HOST} ^www\.(.*)$
-#RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
-#
-#RewriteCond %{HTTP_HOST} !^remont-kvartyr.com.ua$ [NC]
-#RewriteRule ^(.*)$ http://remont-kvartyr.com.ua/$1 [L,R=301]
-####
 
 #Delete extension .php
 RewriteCond %{REQUEST_FILENAME}.php -f
@@ -22,18 +15,24 @@ RewriteRule ^([^/]+)$ /$1.php [L]
 
 #Pagination review
 RewriteRule review/page([0-9]+)$ review.php?page=$1 [L]
+
 #Pagination article
 RewriteRule article/page([0-9]+)$ article.php?page=$1 [L]
+
 #Single article
 RewriteRule ^article/([^/]+)$ view/view_article.php?title=$1 [L]
+
 #Pagination gallery
 RewriteRule gallery/page([0-9]+)$ gallery.php?page=$1 [L]
+
 #Single object gallery
 RewriteRule ^gallery/([^/]+)$ view/view_gallery.php?title=$1 [L]
 
 #Pagination admin article
 RewriteRule admin/admin_article.php/page([0-9]+)$ admin/admin_article.php?page=$1 [L]
+
 #Pagination admin review
 RewriteRule admin/admin_review.php/page([0-9]+)$ admin/admin_review.php?page=$1 [L]
+
 #Pagination admin gallery
 RewriteRule admin/admin_gallery.php/page([0-9]+)$ admin/admin_gallery.php?page=$1 [L]

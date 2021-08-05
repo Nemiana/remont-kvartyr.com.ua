@@ -1,0 +1,18 @@
+Promo site on clear PHP, procedural style, with functional admin-panel. 
+Using HTML5, CSS3, JS, jQuery, Ajax, PHP, GIT, MVC.
+My own laconic design.
+
+Implemented manually: captcha, pagination, import/export price-list, resize images, localization (UKR, RUS, ENG).
+
+Modules: Apache-2.4, PHP-5.5, MySQL-5.5
+
+Change include path in .htaccess!
+
+Admin-panel: 
+/admin
+user
+123
+
+Database dump - remont_kvartyr.sql
+
+(c)Nemiana
